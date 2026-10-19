@@ -6,25 +6,54 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sticky);
-  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  transform: rotate(var(--note-rot, 0deg));
+  transform-origin: center 8px;
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-fast);
   word-break: break-word;
+  overflow: hidden;
 }
 
-.card:hover {
-  transform: translateY(-2px);
+.card:hover,
+.card:focus-within {
+  transform: translateY(-2px) rotate(0deg);
   box-shadow: var(--shadow-sticky-hover);
 }
 
-/* Semi-transparent tape accent at top center */
+/* Subtle physical paper folded-corner effect (bottom right dog-ear) */
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 10px 10px;
+  border-color: transparent transparent var(--bg-canvas) transparent;
+  opacity: 0.85;
+  pointer-events: none;
+  transition: border-width var(--transition-fast);
+}
+
+.card:hover::after {
+  border-width: 0 0 12px 12px;
+}
+
+.overdueCard {
+  border-left: 3px solid var(--color-danger);
+}
+
+/* Translucent tape accent at top center */
 .tape {
   position: absolute;
   top: -6px;
   left: 50%;
   transform: translateX(-50%);
-  width: 50px;
+  width: 48px;
   height: 12px;
   border-radius: 2px;
   pointer-events: none;
+  opacity: 0.85;
 }
 
 /* To-Do Note Color Styling */
@@ -90,15 +119,16 @@
 
 .dragOverlay {
   box-shadow: var(--shadow-modal);
-  transform: scale(1.02);
+  transform: scale(1.02) rotate(0deg) !important;
   cursor: grabbing !important;
-  opacity: 0.96;
+  opacity: 0.98;
+  z-index: 100;
 }
 
 .statusPill {
   font-size: 11px;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: var(--radius-xs);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -148,8 +178,74 @@
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.45;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   white-space: pre-line;
+}
+
+/* Metadata: Priority and Due Date badges */
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.priorityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.02em;
+}
+
+.priorityLow {
+  background-color: var(--priority-low-bg);
+  color: var(--priority-low-text);
+  border: 1px solid var(--priority-low-border);
+}
+
+.priorityMedium {
+  background-color: var(--priority-med-bg);
+  color: var(--priority-med-text);
+  border: 1px solid var(--priority-med-border);
+}
+
+.priorityHigh {
+  background-color: var(--priority-high-bg);
+  color: var(--priority-high-text);
+  border: 1px solid var(--priority-high-border);
+}
+
+.priorityUrgent {
+  background-color: var(--priority-urgent-bg);
+  color: var(--priority-urgent-text);
+  border: 1px solid var(--priority-urgent-border);
+  font-weight: 700;
+}
+
+.dueDateBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  letter-spacing: 0.01em;
+}
+
+.overdueBadge {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+  font-weight: 600;
 }
 
 .cardFooter {
@@ -197,4 +293,14 @@
 .primaryShift:hover {
   background-color: var(--color-primary-subtle);
   color: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transform: none !important;
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: none !important;
+  }
 }

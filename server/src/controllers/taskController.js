@@ -16,7 +16,7 @@ export async function getTasks(req, res, next) {
 
 export async function createTask(req, res, next) {
   try {
-    const { title, description, status } = req.body;
+    const { title, description, status, priority, dueDate } = req.body;
 
     const taskData = {
       title,
@@ -29,6 +29,14 @@ export async function createTask(req, res, next) {
 
     if (status !== undefined) {
       taskData.status = status;
+    }
+
+    if (priority !== undefined) {
+      taskData.priority = priority;
+    }
+
+    if (dueDate !== undefined) {
+      taskData.dueDate = dueDate === '' || dueDate === null ? null : new Date(dueDate);
     }
 
     const task = await Task.create(taskData);
@@ -69,7 +77,7 @@ export async function getTaskById(req, res, next) {
 export async function updateTask(req, res, next) {
   try {
     const updates = {};
-    const { title, description, status } = req.body;
+    const { title, description, status, priority, dueDate } = req.body;
 
     if (title !== undefined) {
       updates.title = title;
@@ -81,6 +89,14 @@ export async function updateTask(req, res, next) {
 
     if (status !== undefined) {
       updates.status = status;
+    }
+
+    if (priority !== undefined) {
+      updates.priority = priority;
+    }
+
+    if (dueDate !== undefined) {
+      updates.dueDate = dueDate === '' || dueDate === null ? null : new Date(dueDate);
     }
 
     const task = await Task.findOneAndUpdate(

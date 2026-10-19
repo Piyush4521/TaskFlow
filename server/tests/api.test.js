@@ -194,6 +194,58 @@ test('taskValidators: validates task create, update, and ID params', async () =>
   }
   assert.equal(res4.statusCode, 400);
   assert.equal(res4.data.errors[0].field, 'title');
+
+  // Invalid priority on create
+  const req5 = { body: { title: 'Valid', priority: 'SuperUrgent' } };
+  const res5 = mockRes();
+  for (const mw of createTaskValidator) {
+    if (res5.statusCode) break;
+    await mw(req5, res5, () => {});
+  }
+  assert.equal(res5.statusCode, 400);
+  assert.equal(res5.data.errors[0].field, 'priority');
+
+  // Invalid dueDate on create
+  const req6 = { body: { title: 'Valid', dueDate: 'not-a-valid-date' } };
+  const res6 = mockRes();
+  for (const mw of createTaskValidator) {
+    if (res6.statusCode) break;
+    await mw(req6, res6, () => {});
+  }
+  assert.equal(res6.statusCode, 400);
+  assert.equal(res6.data.errors[0].field, 'dueDate');
+
+  // Valid priority and dueDate on create passes
+  const req7 = { body: { title: 'Valid', priority: 'Urgent', dueDate: '2026-12-31' } };
+  const res7 = mockRes();
+  for (const mw of createTaskValidator) {
+    if (res7.statusCode) break;
+    await mw(req7, res7, () => {});
+  }
+  assert.equal(res7.statusCode, null);
+
+  // Clearing dueDate on update (null and empty string) passes
+  const req8 = { params: { id: '6ad5f6626a6723bf79337bc7' }, body: { dueDate: null } };
+  const res8 = mockRes();
+  for (const mw of updateTaskValidator) {
+    if (res8.statusCode) break;
+    await mw(req8, res8, () => {});
+  }
+  assert.equal(res8.statusCode, null);
+
+  const req9 = { params: { id: '6ad5f6626a6723bf79337bc7' }, body: { dueDate: '' } };
+  const res9 = mockRes();
+  for (const mw of updateTaskValidator) {
+    if (res9.statusCode) break;
+    await mw(req9, res9, () => {});
+  }
+  assert.equal(res9.statusCode, null);
+});
+
+test('Task model: applies default priority Medium and null dueDate', () => {
+  const task = new Task({ title: 'Schema test', userId: '507f191e810c19729de860ea' });
+  assert.equal(task.priority, 'Medium');
+  assert.equal(task.dueDate, null);
 });
 
 test('taskController: createTask enforces req.userId and ignores client userId', async () => {
@@ -216,6 +268,97 @@ test('taskController: createTask enforces req.userId and ignores client userId',
   assert.notEqual(passedDoc.userId, 'attacker_id');
 
   Task.create = origCreate;
+});
+
+test('taskController: createTask handles priority and dueDate', async () => {
+  const origCreate = Task.create;
+  let passedDoc = null;
+  Task.create = (doc) => {
+    passedDoc = doc;
+    return Promise.resolve({ _id: 'task_2', ...doc });
+  };
+
+  const req = {
+    userId: 'user_legit',
+    body: {
+      title: 'Task with priority',
+      priority: 'Urgent',
+      dueDate: '2026-11-15T00:00:00.000Z'
+    }
+  };
+  const res = mockRes();
+  await createTask(req, res, () => {});
+
+  assert.equal(res.statusCode, 201);
+  assert.equal(passedDoc.priority, 'Urgent');
+  assert.ok(passedDoc.dueDate instanceof Date);
+  assert.equal(passedDoc.dueDate.toISOString(), '2026-11-15T00:00:00.000Z');
+
+  Task.create = origCreate;
+});
+
+test('taskController: updateTask updates priority and dueDate, preserving omitted fields', async () => {
+  const origFindOneAndUpdate = Task.findOneAndUpdate;
+  let capturedUpdate = null;
+
+  Task.findOneAndUpdate = (_query, update) => {
+    capturedUpdate = update;
+    return Promise.resolve({
+      _id: 'task_1',
+      userId: 'user_owner',
+      title: 'Updated title',
+      ...update.$set,
+    });
+  };
+
+  // Partial update: title only -> priority and dueDate omitted from updates.$set
+  const res1 = mockRes();
+  await updateTask(
+    { params: { id: 'task_1' }, userId: 'user_owner', body: { title: 'Only title' } },
+    res1,
+    () => {}
+  );
+  assert.equal(res1.statusCode, 200);
+  assert.equal(capturedUpdate.$set.title, 'Only title');
+  assert.equal('priority' in capturedUpdate.$set, false);
+  assert.equal('dueDate' in capturedUpdate.$set, false);
+
+  // Update priority and dueDate
+  const res2 = mockRes();
+  await updateTask(
+    {
+      params: { id: 'task_1' },
+      userId: 'user_owner',
+      body: { priority: 'High', dueDate: '2026-12-01T12:00:00.000Z' }
+    },
+    res2,
+    () => {}
+  );
+  assert.equal(res2.statusCode, 200);
+  assert.equal(capturedUpdate.$set.priority, 'High');
+  assert.equal(capturedUpdate.$set.dueDate.toISOString(), '2026-12-01T12:00:00.000Z');
+
+  // Clearing dueDate with null
+  const res3 = mockRes();
+  await updateTask(
+    { params: { id: 'task_1' }, userId: 'user_owner', body: { dueDate: null } },
+    res3,
+    () => {}
+  );
+  assert.equal(res3.statusCode, 200);
+  assert.equal(capturedUpdate.$set.dueDate, null);
+
+  // Clearing dueDate with empty string
+  const res4 = mockRes();
+  await updateTask(
+    { params: { id: 'task_1' }, userId: 'user_owner', body: { dueDate: '' } },
+    res4,
+    () => {}
+  );
+  assert.equal(res4.statusCode, 200);
+  assert.equal(capturedUpdate.$set.dueDate, null);
+
+  Task.findOneAndUpdate = origFindOneAndUpdate;
 });
 
 test('taskController: getTasks sorts newest first and filters by req.userId', async () => {

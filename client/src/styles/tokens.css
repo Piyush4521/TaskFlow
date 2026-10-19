@@ -40,26 +40,43 @@
   --color-danger-border: #fecaca;
 
   /* Tactile Sticky Note System (Light) */
-  --note-todo-bg: #fffdf5;
-  --note-todo-border: #fef3c7;
-  --note-todo-tape: rgba(217, 119, 6, 0.18);
+  --note-todo-bg: #fffde8;
+  --note-todo-border: #fef08a;
+  --note-todo-tape: rgba(217, 119, 6, 0.22);
   --note-todo-accent: #d97706;
 
-  --note-prog-bg: #f8fbff;
-  --note-prog-border: #e0f2fe;
-  --note-prog-tape: rgba(2, 132, 199, 0.18);
+  --note-prog-bg: #f4f8fe;
+  --note-prog-border: #dbeafe;
+  --note-prog-tape: rgba(2, 132, 199, 0.2);
   --note-prog-accent: #0284c7;
 
-  --note-done-bg: #f8fdf9;
-  --note-done-border: #dcfce7;
-  --note-done-tape: rgba(22, 163, 74, 0.18);
+  --note-done-bg: #f2fbf5;
+  --note-done-border: #bbf7d0;
+  --note-done-tape: rgba(22, 163, 74, 0.2);
   --note-done-accent: #16a34a;
+
+  /* Priority Badges (Light) */
+  --priority-low-bg: #f1f5f9;
+  --priority-low-text: #475569;
+  --priority-low-border: #cbd5e1;
+
+  --priority-med-bg: #eff6ff;
+  --priority-med-text: #0284c7;
+  --priority-med-border: #bae6fd;
+
+  --priority-high-bg: #fffbeb;
+  --priority-high-text: #b45309;
+  --priority-high-border: #fde68a;
+
+  --priority-urgent-bg: #fef2f2;
+  --priority-urgent-text: #dc2626;
+  --priority-urgent-border: #fecaca;
 
   /* Soft-UI Depth Shadows (Light) */
   --shadow-bento: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
   --shadow-bento-hover: 0 4px 12px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04);
-  --shadow-sticky: 0 2px 5px rgba(15, 23, 42, 0.05), 0 8px 16px rgba(15, 23, 42, 0.04);
-  --shadow-sticky-hover: 0 4px 10px rgba(15, 23, 42, 0.08), 0 12px 24px rgba(15, 23, 42, 0.06);
+  --shadow-sticky: 0 2px 5px rgba(15, 23, 42, 0.05), 0 6px 14px -2px rgba(15, 23, 42, 0.04);
+  --shadow-sticky-hover: 0 4px 12px rgba(15, 23, 42, 0.08), 0 12px 22px -3px rgba(15, 23, 42, 0.06);
   --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
 
   /* Focus Ring */
@@ -124,26 +141,43 @@
   --color-danger-border: #7f1d1d;
 
   /* Tactile Sticky Note System (Dark) */
-  --note-todo-bg: #1c1811;
-  --note-todo-border: #382c16;
-  --note-todo-tape: rgba(251, 191, 36, 0.2);
+  --note-todo-bg: #1f1a12;
+  --note-todo-border: #3d301b;
+  --note-todo-tape: rgba(251, 191, 36, 0.22);
   --note-todo-accent: #fbbf24;
 
-  --note-prog-bg: #0f1a2e;
-  --note-prog-border: #162d4e;
-  --note-prog-tape: rgba(56, 189, 248, 0.2);
+  --note-prog-bg: #0f1d2e;
+  --note-prog-border: #1a3250;
+  --note-prog-tape: rgba(56, 189, 248, 0.22);
   --note-prog-accent: #38bdf8;
 
-  --note-done-bg: #0b1f17;
-  --note-done-border: #133a2a;
-  --note-done-tape: rgba(52, 211, 153, 0.2);
+  --note-done-bg: #0c2219;
+  --note-done-border: #153c2c;
+  --note-done-tape: rgba(52, 211, 153, 0.22);
   --note-done-accent: #34d399;
+
+  /* Priority Badges (Dark) */
+  --priority-low-bg: #1e293b;
+  --priority-low-text: #94a3b8;
+  --priority-low-border: #334155;
+
+  --priority-med-bg: #0c2b42;
+  --priority-med-text: #38bdf8;
+  --priority-med-border: #0e4c75;
+
+  --priority-high-bg: #332105;
+  --priority-high-text: #fbbf24;
+  --priority-high-border: #523709;
+
+  --priority-urgent-bg: #3b0d0d;
+  --priority-urgent-text: #f87171;
+  --priority-urgent-border: #631717;
 
   /* Soft-UI Depth Shadows (Dark) */
   --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.25);
   --shadow-bento-hover: 0 4px 12px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-sticky: 0 2px 6px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3);
-  --shadow-sticky-hover: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-sticky: 0 2px 6px rgba(0, 0, 0, 0.4), 0 6px 14px -2px rgba(0, 0, 0, 0.28);
+  --shadow-sticky-hover: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 22px -3px rgba(0, 0, 0, 0.36);
   --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 
   /* Focus Ring */

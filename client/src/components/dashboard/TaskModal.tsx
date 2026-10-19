@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Task, TaskStatus } from '../../types/task';
+import { Task, TaskStatus, TaskPriority } from '../../types/task';
 import { CloseIcon, AlertCircleIcon } from '../common/Icons';
 import { Button } from '../common/Button';
 import { ApiClientError } from '../../services/api';
@@ -8,7 +8,13 @@ import styles from './TaskModal.module.css';
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (taskData: { title: string; description: string; status: TaskStatus }) => Promise<void> | void;
+  onSubmit: (taskData: {
+    title: string;
+    description: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+    dueDate: string | null;
+  }) => Promise<void> | void;
   initialTask?: Task | null;
   defaultStatus?: TaskStatus;
 }
@@ -72,7 +78,13 @@ interface TaskModalFormProps {
   initialTask?: Task | null;
   defaultStatus: TaskStatus;
   onClose: () => void;
-  onSubmit: (taskData: { title: string; description: string; status: TaskStatus }) => Promise<void> | void;
+  onSubmit: (taskData: {
+    title: string;
+    description: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+    dueDate: string | null;
+  }) => Promise<void> | void;
 }
 
 const TaskModalForm: React.FC<TaskModalFormProps> = ({
@@ -81,9 +93,15 @@ const TaskModalForm: React.FC<TaskModalFormProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const initialDueDate = initialTask?.dueDate
+    ? new Date(initialTask.dueDate).toISOString().split('T')[0]
+    : '';
+
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [status, setStatus] = useState<TaskStatus>(initialTask?.status || defaultStatus);
+  const [priority, setPriority] = useState<TaskPriority>(initialTask?.priority || 'Medium');
+  const [dueDate, setDueDate] = useState<string>(initialDueDate);
   const [titleError, setTitleError] = useState('');
   const [serverError, setServerError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,6 +132,8 @@ const TaskModalForm: React.FC<TaskModalFormProps> = ({
         title: trimmedTitle,
         description: description.trim(),
         status,
+        priority,
+        dueDate: dueDate ? new Date(`${dueDate}T00:00:00.000Z`).toISOString() : null,
       });
       onClose();
     } catch (err) {
@@ -175,21 +195,67 @@ const TaskModalForm: React.FC<TaskModalFormProps> = ({
         />
       </div>
 
+      <div className={styles.fieldRow}>
+        <div className={styles.fieldGroup}>
+          <label htmlFor="task-status" className={styles.label}>
+            Workflow Stage
+          </label>
+          <select
+            id="task-status"
+            className={styles.select}
+            value={status}
+            disabled={isSubmitting}
+            onChange={(e) => setStatus(e.target.value as TaskStatus)}
+          >
+            <option value="To-Do">To-Do</option>
+            <option value="In-Progress">In-Progress</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+
+        <div className={styles.fieldGroup}>
+          <label htmlFor="task-priority" className={styles.label}>
+            Priority
+          </label>
+          <select
+            id="task-priority"
+            className={styles.select}
+            value={priority}
+            disabled={isSubmitting}
+            onChange={(e) => setPriority(e.target.value as TaskPriority)}
+          >
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+
       <div className={styles.fieldGroup}>
-        <label htmlFor="task-status" className={styles.label}>
-          Workflow Stage
-        </label>
-        <select
-          id="task-status"
-          className={styles.select}
-          value={status}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <label htmlFor="task-duedate" className={styles.label}>
+            Due Date <span className={styles.optionalMark}>(Optional)</span>
+          </label>
+          {dueDate && (
+            <button
+              type="button"
+              className={styles.clearDateBtn}
+              onClick={() => setDueDate('')}
+              disabled={isSubmitting}
+            >
+              Clear Date
+            </button>
+          )}
+        </div>
+        <input
+          id="task-duedate"
+          type="date"
+          className={styles.input}
+          value={dueDate}
           disabled={isSubmitting}
-          onChange={(e) => setStatus(e.target.value as TaskStatus)}
-        >
-          <option value="To-Do">To-Do</option>
-          <option value="In-Progress">In-Progress</option>
-          <option value="Done">Done</option>
-        </select>
+          onChange={(e) => setDueDate(e.target.value)}
+        />
       </div>
 
       <div className={styles.actions}>

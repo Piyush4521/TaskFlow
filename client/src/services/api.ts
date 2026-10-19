@@ -6,7 +6,7 @@ import {
   SingleTaskResponse,
   DeleteTaskResponse,
 } from '../types/api';
-import { TaskStatus } from '../types/task';
+import { TaskStatus, TaskPriority } from '../types/task';
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000').replace(/\/+$/, '');
 
@@ -122,7 +122,13 @@ export const api = {
 
     create: (
       token: string,
-      payload: { title: string; description?: string; status?: TaskStatus }
+      payload: {
+        title: string;
+        description?: string;
+        status?: TaskStatus;
+        priority?: TaskPriority;
+        dueDate?: string | null;
+      }
     ) =>
       request<SingleTaskResponse>('/api/tasks', {
         method: 'POST',
@@ -135,7 +141,13 @@ export const api = {
     update: (
       token: string,
       id: string,
-      payload: { title?: string; description?: string; status?: TaskStatus }
+      payload: {
+        title?: string;
+        description?: string;
+        status?: TaskStatus;
+        priority?: TaskPriority;
+        dueDate?: string | null;
+      }
     ) =>
       request<SingleTaskResponse>(`/api/tasks/${id}`, {
         method: 'PATCH',

@@ -1,6 +1,20 @@
 import { body, param } from 'express-validator';
-import { TASK_STATUSES } from '../models/Task.js';
+import { TASK_STATUSES, TASK_PRIORITIES } from '../models/Task.js';
 import { validate } from '../middleware/validate.js';
+
+const validateDueDate = body('dueDate')
+  .optional({ values: 'null' })
+  .custom((value) => {
+    if (value === null || value === '') return true;
+    if (typeof value !== 'string' && !(value instanceof Date)) {
+      throw new Error('Due date must be a valid date');
+    }
+    const parsed = Date.parse(value);
+    if (isNaN(parsed)) {
+      throw new Error('Due date must be a valid date');
+    }
+    return true;
+  });
 
 export const createTaskValidator = [
   body('title')
@@ -22,6 +36,11 @@ export const createTaskValidator = [
     .optional()
     .isIn(TASK_STATUSES)
     .withMessage('Status must be To-Do, In-Progress, or Done'),
+  body('priority')
+    .optional()
+    .isIn(TASK_PRIORITIES)
+    .withMessage('Priority must be Low, Medium, High, or Urgent'),
+  validateDueDate,
   validate,
 ];
 
@@ -49,6 +68,11 @@ export const updateTaskValidator = [
     .optional()
     .isIn(TASK_STATUSES)
     .withMessage('Status must be To-Do, In-Progress, or Done'),
+  body('priority')
+    .optional()
+    .isIn(TASK_PRIORITIES)
+    .withMessage('Priority must be Low, Medium, High, or Urgent'),
+  validateDueDate,
   validate,
 ];
 

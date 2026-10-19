@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Task, TaskStatus } from '../types/task';
+import { Task, TaskStatus, TaskPriority } from '../types/task';
 import { useAuth } from '../context/useAuth';
 import { api, ApiClientError } from '../services/api';
 import { Navbar } from '../components/common/Navbar';
@@ -91,7 +91,13 @@ export const DashboardPage: React.FC = () => {
     setEditingTask(null);
   };
 
-  const handleSaveTask = async (taskData: { title: string; description: string; status: TaskStatus }) => {
+  const handleSaveTask = async (taskData: {
+    title: string;
+    description: string;
+    status: TaskStatus;
+    priority: TaskPriority;
+    dueDate: string | null;
+  }) => {
     if (!token) return;
 
     if (editingTask) {
@@ -99,6 +105,8 @@ export const DashboardPage: React.FC = () => {
         title: taskData.title,
         description: taskData.description,
         status: taskData.status,
+        priority: taskData.priority,
+        dueDate: taskData.dueDate,
       });
       setTasks((prev) => prev.map((t) => (t._id === res.task._id ? res.task : t)));
       showToast('Task updated successfully');
@@ -107,6 +115,8 @@ export const DashboardPage: React.FC = () => {
         title: taskData.title,
         description: taskData.description,
         status: taskData.status,
+        priority: taskData.priority,
+        dueDate: taskData.dueDate,
       });
       setTasks((prev) => [res.task, ...prev]);
       showToast('Task created successfully');

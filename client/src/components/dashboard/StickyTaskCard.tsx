@@ -1,6 +1,14 @@
 import React from 'react';
 import { Task, TaskStatus } from '../../types/task';
-import { EditIcon, TrashIcon, CheckIcon, ArrowRightIcon } from '../common/Icons';
+import {
+  EditIcon,
+  TrashIcon,
+  CheckIcon,
+  ArrowRightIcon,
+  CalendarIcon,
+  FlagIcon,
+  AlertCircleIcon,
+} from '../common/Icons';
 import styles from './StickyTaskCard.module.css';
 
 interface StickyTaskCardProps {
@@ -12,6 +20,37 @@ interface StickyTaskCardProps {
   isDragOverlay?: boolean;
 }
 
+const getRotation = (id: string): number => {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash << 5) - hash + id.charCodeAt(i);
+    hash |= 0;
+  }
+  const angles = [-0.65, 0.45, -0.35, 0.55, -0.5, 0.35, 0];
+  return angles[Math.abs(hash) % angles.length];
+};
+
+function checkIsOverdue(dueDateStr?: string | null, status?: TaskStatus): boolean {
+  if (!dueDateStr || status === 'Done') return false;
+  const due = new Date(dueDateStr);
+  if (isNaN(due.getTime())) return false;
+  const now = new Date();
+  const dueEndOfDay = new Date(due);
+  dueEndOfDay.setHours(23, 59, 59, 999);
+  return now.getTime() > dueEndOfDay.getTime();
+}
+
+function formatDueDate(dueDateStr?: string | null): string | null {
+  if (!dueDateStr) return null;
+  const due = new Date(dueDateStr);
+  if (isNaN(due.getTime())) return null;
+  return due.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: due.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
+  });
+}
+
 export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
   task,
   onEdit,
@@ -21,6 +60,13 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
   isDragOverlay = false,
 }) => {
   const statusClassName = styles[task.status.toLowerCase().replace('-', '')];
+  const rotation = React.useMemo(() => getRotation(task._id), [task._id]);
+  const isOverdue = checkIsOverdue(task.dueDate, task.status);
+  const formattedDueDate = formatDueDate(task.dueDate);
+
+
+  const priority = task.priority || 'Medium';
+  const priorityClass = styles[`priority${priority}`] || styles.priorityMedium;
 
   const getNextStatus = (): TaskStatus | null => {
     if (task.status === 'To-Do') return 'In-Progress';
@@ -37,9 +83,16 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
   const nextStatus = getNextStatus();
   const prevStatus = getPrevStatus();
 
+  const cardStyle: React.CSSProperties = isDragOverlay
+    ? {}
+    : ({
+        '--note-rot': `${rotation}deg`,
+      } as React.CSSProperties);
+
   return (
     <article
-      className={`${styles.card} ${statusClassName} ${isDragOverlay ? styles.dragOverlay : ''}`}
+      className={`${styles.card} ${statusClassName} ${isOverdue ? styles.overdueCard : ''} ${isDragOverlay ? styles.dragOverlay : ''}`}
+      style={cardStyle}
     >
       <div className={styles.tape} aria-hidden="true" />
 
@@ -78,6 +131,28 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
       <h3 className={styles.title}>{task.title}</h3>
 
       {task.description && <p className={styles.description}>{task.description}</p>}
+
+      <div className={styles.metaRow}>
+        <span className={`${styles.priorityBadge} ${priorityClass}`}>
+          <FlagIcon size={11} aria-hidden="true" />
+          <span>{priority}</span>
+        </span>
+
+        {formattedDueDate && (
+          <span
+            className={`${styles.dueDateBadge} ${isOverdue ? styles.overdueBadge : ''}`}
+            aria-label={isOverdue ? `Overdue, due on ${formattedDueDate}` : `Due on ${formattedDueDate}`}
+            title={isOverdue ? `Overdue: deadline was ${formattedDueDate}` : `Due on ${formattedDueDate}`}
+          >
+            {isOverdue ? (
+              <AlertCircleIcon size={12} aria-hidden="true" />
+            ) : (
+              <CalendarIcon size={12} aria-hidden="true" />
+            )}
+            <span>{isOverdue ? `Overdue: ${formattedDueDate}` : formattedDueDate}</span>
+          </span>
+        )}
+      </div>
 
       {!isDragOverlay && onStatusChange && (
         <div className={styles.cardFooter} onPointerDown={(e) => e.stopPropagation()}>

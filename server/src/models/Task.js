@@ -1,6 +1,7 @@
-﻿import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 export const TASK_STATUSES = ['To-Do', 'In-Progress', 'Done'];
+export const TASK_PRIORITIES = ['Low', 'Medium', 'High', 'Urgent'];
 
 const taskSchema = new mongoose.Schema(
   {
@@ -25,6 +26,18 @@ const taskSchema = new mongoose.Schema(
       },
       default: 'To-Do',
       required: true,
+    },
+    priority: {
+      type: String,
+      enum: {
+        values: TASK_PRIORITIES,
+        message: 'Priority must be Low, Medium, High, or Urgent',
+      },
+      default: 'Medium',
+    },
+    dueDate: {
+      type: Date,
+      default: null,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
