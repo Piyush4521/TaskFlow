@@ -1,0 +1,200 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sticky);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  word-break: break-word;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sticky-hover);
+}
+
+/* Semi-transparent tape accent at top center */
+.tape {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 12px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* To-Do Note Color Styling */
+.todo {
+  background-color: var(--note-todo-bg);
+  border-color: var(--note-todo-border);
+}
+.todo .tape {
+  background-color: var(--note-todo-tape);
+}
+.todo .statusPill {
+  background-color: var(--color-todo-bg);
+  color: var(--color-todo);
+  border: 1px solid var(--color-todo-border);
+}
+
+/* In-Progress Note Color Styling */
+.inprogress {
+  background-color: var(--note-prog-bg);
+  border-color: var(--note-prog-border);
+}
+.inprogress .tape {
+  background-color: var(--note-prog-tape);
+}
+.inprogress .statusPill {
+  background-color: var(--color-prog-bg);
+  color: var(--color-prog);
+  border: 1px solid var(--color-prog-border);
+}
+
+/* Done Note Color Styling */
+.done {
+  background-color: var(--note-done-bg);
+  border-color: var(--note-done-border);
+}
+.done .tape {
+  background-color: var(--note-done-tape);
+}
+.done .statusPill {
+  background-color: var(--color-done-bg);
+  color: var(--color-done);
+  border: 1px solid var(--color-done-border);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.statusGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.savingBadge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.dragOverlay {
+  box-shadow: var(--shadow-modal);
+  transform: scale(1.02);
+  cursor: grabbing !important;
+  opacity: 0.96;
+}
+
+.statusPill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-xs);
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.iconBtn:hover {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.deleteBtn:hover {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 12px;
+  white-space: pre-line;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.statusControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusShiftBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.statusShiftBtn:hover {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.primaryShift {
+  background-color: var(--bg-surface);
+  color: var(--color-primary);
+  border-color: var(--color-primary-border);
+}
+
+.primaryShift:hover {
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
