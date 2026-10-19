@@ -12,6 +12,7 @@ import {
   updateTaskValidator,
   taskIdValidator,
 } from '../validators/taskValidators.js';
+import { taskMutationLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -19,11 +20,11 @@ router.use(authenticate);
 
 router.route('/')
   .get(getTasks)
-  .post(createTaskValidator, createTask);
+  .post(taskMutationLimiter, createTaskValidator, createTask);
 
 router.route('/:id')
   .get(taskIdValidator, getTaskById)
-  .patch(updateTaskValidator, updateTask)
-  .delete(taskIdValidator, deleteTask);
+  .patch(taskMutationLimiter, updateTaskValidator, updateTask)
+  .delete(taskMutationLimiter, taskIdValidator, deleteTask);
 
 export default router;

@@ -4,7 +4,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { notFoundHandler, errorHandler } from '../src/middleware/errorHandler.js';
 import { authenticate } from '../src/middleware/authMiddleware.js';
-import { createAuthLimiter, authLimiter } from '../src/middleware/rateLimiter.js';
+import { createAuthLimiter, authLimiter, createTaskMutationLimiter, taskMutationLimiter } from '../src/middleware/rateLimiter.js';
 import { registerValidator, loginValidator } from '../src/validators/authValidators.js';
 import { createTaskValidator, updateTaskValidator, taskIdValidator } from '../src/validators/taskValidators.js';
 import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../src/controllers/taskController.js';
@@ -307,6 +307,88 @@ test('rateLimiter: authLimiter permits normal requests under the threshold', asy
   try {
     const port = server.address().port;
     const url = `http://127.0.0.1:${port}/api/auth/login`;
+    const res = await fetch(url, { method: 'POST' });
+    assert.equal(res.status, 200);
+    assert.equal((await res.json()).success, true);
+  } finally {
+    server.close();
+  }
+});
+
+test('rateLimiter: returns HTTP 429 when task mutation limit is exceeded', async () => {
+  const app = express();
+  const testMutationLimiter = createTaskMutationLimiter({ windowMs: 60 * 1000, limit: 2 });
+  app.post('/api/tasks', testMutationLimiter, (_req, res) => res.json({ success: true, action: 'created' }));
+  app.patch('/api/tasks/:id', testMutationLimiter, (_req, res) => res.json({ success: true, action: 'updated' }));
+  app.delete('/api/tasks/:id', testMutationLimiter, (_req, res) => res.json({ success: true, action: 'deleted' }));
+
+  const server = app.listen(0);
+  try {
+    const port = server.address().port;
+    const base = `http://127.0.0.1:${port}/api/tasks`;
+
+    // 1st request under limit
+    const r1 = await fetch(base, { method: 'POST' });
+    assert.equal(r1.status, 200);
+
+    // 2nd request at limit
+    const r2 = await fetch(`${base}/123`, { method: 'PATCH' });
+    assert.equal(r2.status, 200);
+
+    // 3rd request exceeds limit
+    const r3 = await fetch(`${base}/123`, { method: 'DELETE' });
+    assert.equal(r3.status, 429);
+    const body = await r3.json();
+    assert.equal(body.success, false);
+    assert.equal(body.message, 'Too many requests, please try again later');
+  } finally {
+    server.close();
+  }
+});
+
+test('rateLimiter: taskMutationLimiter does not block task reads even when limit is reached', async () => {
+  const app = express();
+  const testMutationLimiter = createTaskMutationLimiter({ windowMs: 60 * 1000, limit: 1 });
+  app.get('/api/tasks', (_req, res) => res.json({ success: true, action: 'list' }));
+  app.get('/api/tasks/:id', (_req, res) => res.json({ success: true, action: 'read' }));
+  app.post('/api/tasks', testMutationLimiter, (_req, res) => res.json({ success: true, action: 'created' }));
+
+  const server = app.listen(0);
+  try {
+    const port = server.address().port;
+    const base = `http://127.0.0.1:${port}/api/tasks`;
+
+    // 1st mutation succeeds
+    const r1 = await fetch(base, { method: 'POST' });
+    assert.equal(r1.status, 200);
+
+    // 2nd mutation is blocked with 429
+    const r2 = await fetch(base, { method: 'POST' });
+    assert.equal(r2.status, 429);
+
+    // Task reads continue to work normally
+    const rGetList = await fetch(base, { method: 'GET' });
+    assert.equal(rGetList.status, 200);
+    const bGetList = await rGetList.json();
+    assert.equal(bGetList.action, 'list');
+
+    const rGetSingle = await fetch(`${base}/test-id`, { method: 'GET' });
+    assert.equal(rGetSingle.status, 200);
+    const bGetSingle = await rGetSingle.json();
+    assert.equal(bGetSingle.action, 'read');
+  } finally {
+    server.close();
+  }
+});
+
+test('rateLimiter: taskMutationLimiter permits normal requests under the threshold', async () => {
+  const app = express();
+  app.post('/api/tasks', taskMutationLimiter, (_req, res) => res.json({ success: true }));
+
+  const server = app.listen(0);
+  try {
+    const port = server.address().port;
+    const url = `http://127.0.0.1:${port}/api/tasks`;
     const res = await fetch(url, { method: 'POST' });
     assert.equal(res.status, 200);
     assert.equal((await res.json()).success, true);
