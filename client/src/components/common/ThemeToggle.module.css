@@ -1,0 +1,18 @@
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.toggleButton:hover {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}

@@ -1,0 +1,148 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.brandLink:hover {
+  text-decoration: none;
+}
+
+.brandIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+}
+
+.brandName {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.tagline {
+  font-size: 12px;
+  color: var(--text-muted);
+  border-left: 1px solid var(--border-medium);
+  padding-left: 12px;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .tagline {
+    display: inline-block;
+  }
+}
+
+.actionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.authLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-subtle);
+  text-decoration: none;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+.avatarInitials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px 14px;
+  }
+  .userName {
+    display: none;
+  }
+}

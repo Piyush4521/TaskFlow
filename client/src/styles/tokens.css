@@ -1,0 +1,162 @@
+:root {
+  /* Light Theme Palette */
+  --bg-canvas: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-subtle: #f1f5f9;
+  --bg-input: #ffffff;
+
+  --border-subtle: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-strong: #94a3b8;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Primary Accent: Crisp Steel Blue / Cobalt (No purple gradients) */
+  --color-primary: #0284c7;
+  --color-primary-hover: #0369a1;
+  --color-primary-active: #075985;
+  --color-primary-subtle: #f0f9ff;
+  --color-primary-border: #bae6fd;
+
+  /* Status Colors */
+  --color-todo: #d97706;
+  --color-todo-bg: #fffbeb;
+  --color-todo-border: #fde68a;
+
+  --color-prog: #0284c7;
+  --color-prog-bg: #f0f9ff;
+  --color-prog-border: #bae6fd;
+
+  --color-done: #16a34a;
+  --color-done-bg: #f0fdf4;
+  --color-done-border: #bbf7d0;
+
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+
+  /* Tactile Sticky Note System (Light) */
+  --note-todo-bg: #fffdf5;
+  --note-todo-border: #fef3c7;
+  --note-todo-tape: rgba(217, 119, 6, 0.18);
+  --note-todo-accent: #d97706;
+
+  --note-prog-bg: #f8fbff;
+  --note-prog-border: #e0f2fe;
+  --note-prog-tape: rgba(2, 132, 199, 0.18);
+  --note-prog-accent: #0284c7;
+
+  --note-done-bg: #f8fdf9;
+  --note-done-border: #dcfce7;
+  --note-done-tape: rgba(22, 163, 74, 0.18);
+  --note-done-accent: #16a34a;
+
+  /* Soft-UI Depth Shadows (Light) */
+  --shadow-bento: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
+  --shadow-bento-hover: 0 4px 12px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04);
+  --shadow-sticky: 0 2px 5px rgba(15, 23, 42, 0.05), 0 8px 16px rgba(15, 23, 42, 0.04);
+  --shadow-sticky-hover: 0 4px 10px rgba(15, 23, 42, 0.08), 0 12px 24px rgba(15, 23, 42, 0.06);
+  --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--bg-canvas), 0 0 0 4px #0284c7;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Modest Corner Radii (No pill-shaped buttons) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-smooth: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Theme Palette */
+[data-theme='dark'] {
+  --bg-canvas: #090d16;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #162032;
+  --bg-surface-subtle: #1e293b;
+  --bg-input: #131b2a;
+
+  --border-subtle: #1e293b;
+  --border-medium: #334155;
+  --border-strong: #475569;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+
+  /* Primary Accent: Steel Blue / Azure in Dark Mode */
+  --color-primary: #38bdf8;
+  --color-primary-hover: #7dd3fc;
+  --color-primary-active: #0284c7;
+  --color-primary-subtle: #082f49;
+  --color-primary-border: #0c4a6e;
+
+  /* Status Colors */
+  --color-todo: #fbbf24;
+  --color-todo-bg: #291d03;
+  --color-todo-border: #451a03;
+
+  --color-prog: #38bdf8;
+  --color-prog-bg: #082f49;
+  --color-prog-border: #0c4a6e;
+
+  --color-done: #34d399;
+  --color-done-bg: #064e3b;
+  --color-done-border: #065f46;
+
+  --color-danger: #f87171;
+  --color-danger-bg: #450a0a;
+  --color-danger-border: #7f1d1d;
+
+  /* Tactile Sticky Note System (Dark) */
+  --note-todo-bg: #1c1811;
+  --note-todo-border: #382c16;
+  --note-todo-tape: rgba(251, 191, 36, 0.2);
+  --note-todo-accent: #fbbf24;
+
+  --note-prog-bg: #0f1a2e;
+  --note-prog-border: #162d4e;
+  --note-prog-tape: rgba(56, 189, 248, 0.2);
+  --note-prog-accent: #38bdf8;
+
+  --note-done-bg: #0b1f17;
+  --note-done-border: #133a2a;
+  --note-done-tape: rgba(52, 211, 153, 0.2);
+  --note-done-accent: #34d399;
+
+  /* Soft-UI Depth Shadows (Dark) */
+  --shadow-bento: 0 1px 3px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-bento-hover: 0 4px 12px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-sticky: 0 2px 6px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3);
+  --shadow-sticky-hover: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.4);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--bg-canvas), 0 0 0 4px #38bdf8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

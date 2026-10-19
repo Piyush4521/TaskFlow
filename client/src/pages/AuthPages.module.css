@@ -1,0 +1,149 @@
+.pageWrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-canvas);
+}
+
+.mainContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 48px;
+}
+
+.authCard {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-bento);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.brandBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.alertNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.successNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-done-bg);
+  border: 1px solid var(--color-done-border);
+  color: var(--color-done);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input {
+  width: 100%;
+  font-size: 14px;
+}
+
+.inputError {
+  border-color: var(--color-danger);
+}
+
+.errorText {
+  font-size: 12px;
+  color: var(--color-danger);
+  margin-top: 2px;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 13px;
+}
+
+.footerText {
+  color: var(--text-muted);
+}
+
+.footerLink {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .authCard {
+    padding: 24px 18px;
+  }
+}
