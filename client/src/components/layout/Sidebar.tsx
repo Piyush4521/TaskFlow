@@ -55,10 +55,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       id: 'my-tasks',
       label: 'My Tasks',
-      path: '/my-tasks',
+      path: '/tasks',
       icon: <CheckCircleIcon size={18} />,
-      isAvailable: false,
-      badge: 'Soon',
+      isAvailable: true,
     },
     {
       id: 'calendar',
@@ -128,7 +127,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <span className={styles.sectionTitle}>Workspace</span>
 
           {navEntries.map((item) => {
-            const isActive = item.isAvailable && location.pathname === item.path;
+            const isActive =
+              item.isAvailable &&
+              (location.pathname === item.path || (item.path === '/tasks' && location.pathname === '/my-tasks'));
 
             if (item.isAvailable) {
               return (
