@@ -78,8 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Settings',
       path: '/settings',
       icon: <SettingsIcon size={18} />,
-      isAvailable: false,
-      badge: 'Soon',
+      isAvailable: true,
     },
   ];
 
