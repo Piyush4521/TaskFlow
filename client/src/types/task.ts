@@ -21,3 +21,32 @@ export interface ColumnDefinition {
   emptyTitle: string;
   emptyMessage: string;
 }
+
+export interface CreateTaskInput {
+  title: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  dueDate?: string | null;
+}
+
+export interface UpdateTaskInput {
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  dueDate?: string | null;
+}
+
+export interface TaskContextType {
+  tasks: Task[];
+  isLoading: boolean;
+  errorMessage: string | null;
+  savingTaskIds: Set<string>;
+  reloadTasks: () => void;
+  createTask: (data: CreateTaskInput) => Promise<Task>;
+  updateTask: (id: string, data: UpdateTaskInput) => Promise<Task>;
+  deleteTask: (id: string) => Promise<void>;
+  changeTaskStatus: (id: string, newStatus: TaskStatus) => Promise<void>;
+  clearError: () => void;
+}

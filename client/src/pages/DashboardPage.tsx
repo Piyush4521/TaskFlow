@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Task, TaskStatus, TaskPriority } from '../types/task';
-import { useAuth } from '../context/useAuth';
-import { api, ApiClientError } from '../services/api';
+import { useTasks } from '../context/useTasks';
 import { AppShell } from '../components/layout/AppShell';
 import { BentoHeader } from '../components/dashboard/BentoHeader';
 import { KanbanBoard } from '../components/dashboard/KanbanBoard';
@@ -11,15 +10,19 @@ import { AlertCircleIcon, CheckCircleIcon } from '../components/common/Icons';
 import styles from './DashboardPage.module.css';
 
 export const DashboardPage: React.FC = () => {
-  const { token, logout } = useAuth();
+  const {
+    tasks,
+    isLoading,
+    errorMessage,
+    savingTaskIds,
+    reloadTasks,
+    createTask,
+    updateTask,
+    deleteTask,
+    changeTaskStatus,
+  } = useTasks();
 
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successToast, setSuccessToast] = useState<string | null>(null);
-  const [reloadCounter, setReloadCounter] = useState(0);
-  const [savingTaskIds, setSavingTaskIds] = useState<Set<string>>(new Set());
-
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -33,45 +36,8 @@ export const DashboardPage: React.FC = () => {
   };
 
   const handleRetry = () => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    setReloadCounter((c) => c + 1);
+    reloadTasks();
   };
-
-  useEffect(() => {
-    let isCurrent = true;
-
-    if (!token) return;
-
-    api.tasks
-      .list(token)
-      .then((res) => {
-        if (isCurrent) {
-          setTasks(res.tasks || []);
-        }
-      })
-      .catch((err) => {
-        if (!isCurrent) return;
-        if (err instanceof ApiClientError) {
-          if (err.isAuthError) {
-            logout(true);
-            return;
-          }
-          setErrorMessage(err.message);
-        } else {
-          setErrorMessage('Failed to load tasks. Please try again.');
-        }
-      })
-      .finally(() => {
-        if (isCurrent) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, [token, logout, reloadCounter]);
 
   const handleOpenCreateModal = (status?: TaskStatus) => {
     setEditingTask(null);
@@ -97,86 +63,30 @@ export const DashboardPage: React.FC = () => {
     priority: TaskPriority;
     dueDate: string | null;
   }) => {
-    if (!token) return;
-
     if (editingTask) {
-      const res = await api.tasks.update(token, editingTask._id, {
-        title: taskData.title,
-        description: taskData.description,
-        status: taskData.status,
-        priority: taskData.priority,
-        dueDate: taskData.dueDate,
-      });
-      setTasks((prev) => prev.map((t) => (t._id === res.task._id ? res.task : t)));
+      await updateTask(editingTask._id, taskData);
       showToast('Task updated successfully');
     } else {
-      const res = await api.tasks.create(token, {
-        title: taskData.title,
-        description: taskData.description,
-        status: taskData.status,
-        priority: taskData.priority,
-        dueDate: taskData.dueDate,
-      });
-      setTasks((prev) => [res.task, ...prev]);
+      await createTask(taskData);
       showToast('Task created successfully');
     }
   };
 
   const handleDeleteTask = async (id: string) => {
-    if (!token) return;
-
     try {
-      await api.tasks.delete(token, id);
-      setTasks((prev) => prev.filter((t) => t._id !== id));
+      await deleteTask(id);
       showToast('Task deleted successfully');
-    } catch (err) {
-      if (err instanceof ApiClientError) {
-        if (err.isAuthError) {
-          logout(true);
-          return;
-        }
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('Failed to delete task. Please try again.');
-      }
+    } catch {
+      // Error message is managed in TaskContext
     }
   };
 
   const handleStatusChange = async (id: string, newStatus: TaskStatus) => {
-    if (!token) return;
-    if (savingTaskIds.has(id)) return;
-
-    const task = tasks.find((t) => t._id === id);
-    if (!task || task.status === newStatus) return;
-
-    const originalStatus = task.status;
-
-    // Optimistic status update
-    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, status: newStatus } : t)));
-    setSavingTaskIds((prev) => new Set(prev).add(id));
-
     try {
-      const res = await api.tasks.update(token, id, { status: newStatus });
-      setTasks((prev) => prev.map((t) => (t._id === id ? res.task : t)));
+      await changeTaskStatus(id, newStatus);
       showToast(`Task moved to ${newStatus}`);
-    } catch (err) {
-      // Rollback to original status on error
-      setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, status: originalStatus } : t)));
-      if (err instanceof ApiClientError) {
-        if (err.isAuthError) {
-          logout(true);
-          return;
-        }
-        setErrorMessage(`Failed to update task: ${err.message}. Reverted to ${originalStatus}.`);
-      } else {
-        setErrorMessage(`Failed to move task. Reverted to ${originalStatus}.`);
-      }
-    } finally {
-      setSavingTaskIds((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
+    } catch {
+      // Rollback and error message are managed in TaskContext
     }
   };
 

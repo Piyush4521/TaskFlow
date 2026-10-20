@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { TaskProvider } from './context/TaskContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { DashboardPage } from './pages/DashboardPage';
 import { LoginPage } from './pages/LoginPage';
@@ -17,13 +18,16 @@ export const App: React.FC = () => {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/"
               element={
                 <ProtectedRoute>
-                  <DashboardPage />
+                  <TaskProvider>
+                    <Outlet />
+                  </TaskProvider>
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="/" element={<DashboardPage />} />
+            </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
