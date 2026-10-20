@@ -71,8 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Reports',
       path: '/reports',
       icon: <FileTextIcon size={18} />,
-      isAvailable: false,
-      badge: 'Soon',
+      isAvailable: true,
     },
     {
       id: 'settings',
