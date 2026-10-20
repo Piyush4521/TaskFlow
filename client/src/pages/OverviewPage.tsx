@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TaskStatus, TaskPriority } from '../types/task';
 import { useTasks } from '../context/useTasks';
@@ -9,10 +9,13 @@ import {
   PlusIcon,
   ArrowRightIcon,
   CheckCircleIcon,
+  CheckIcon,
   ClockIcon,
   LayersIcon,
   AlertCircleIcon,
   CalendarIcon,
+  UsersIcon,
+  KanbanIcon,
   FlagIcon,
 } from '../components/common/Icons';
 import styles from './OverviewPage.module.css';
@@ -73,7 +76,7 @@ function formatRelativeTime(dateStr?: string): string {
 }
 
 export const OverviewPage: React.FC = () => {
-  const { tasks, isLoading, errorMessage, reloadTasks, createTask } = useTasks();
+  const { tasks, isLoading, errorMessage, reloadTasks, createTask, changeTaskStatus } = useTasks();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -133,6 +136,28 @@ export const OverviewPage: React.FC = () => {
     })
     .slice(0, 5);
 
+  // Priority Focus Task (Fernly-inspired Agenda highlight)
+  const focusTask = useMemo(() => {
+    if (overdueTasks.length > 0) return { task: overdueTasks[0], reason: 'Overdue Deadline' };
+    const urgentHigh = tasks.find(
+      (t) => t.status !== 'Done' && (t.priority === 'Urgent' || t.priority === 'High')
+    );
+    if (urgentHigh) return { task: urgentHigh, reason: `${urgentHigh.priority} Priority Focus` };
+    if (upcomingTasks.length > 0) return { task: upcomingTasks[0], reason: 'Upcoming Deadline' };
+    const firstActive = tasks.find((t) => t.status !== 'Done');
+    if (firstActive) return { task: firstActive, reason: 'Next Up' };
+    return null;
+  }, [overdueTasks, upcomingTasks, tasks]);
+
+  const handleQuickComplete = async (taskId: string, title: string) => {
+    try {
+      await changeTaskStatus(taskId, 'Done');
+      showToast(`Task "${title}" marked as complete.`);
+    } catch {
+      // Handled in context
+    }
+  };
+
   return (
     <AppShell title="Dashboard" badge="Overview">
       <div className={styles.contentContainer}>
@@ -183,6 +208,73 @@ export const OverviewPage: React.FC = () => {
             </Button>
           </div>
         </section>
+
+        {/* Quick Navigation Bar */}
+        <nav className={styles.quickNavBar} aria-label="Quick Workspace Navigation">
+          <Link to="/" className={styles.quickNavLink}>
+            <KanbanIcon size={14} />
+            <span>Kanban Board</span>
+          </Link>
+          <Link to="/tasks" className={styles.quickNavLink}>
+            <CheckCircleIcon size={14} />
+            <span>My Tasks</span>
+          </Link>
+          <Link to="/calendar" className={styles.quickNavLink}>
+            <CalendarIcon size={14} />
+            <span>Calendar</span>
+          </Link>
+          <Link to="/team" className={styles.quickNavLink}>
+            <UsersIcon size={14} />
+            <span>Team Workspace</span>
+          </Link>
+          <Link to="/reports" className={styles.quickNavLink}>
+            <LayersIcon size={14} />
+            <span>Reports & Analytics</span>
+          </Link>
+        </nav>
+
+        {/* Priority Focus Action Card (Fernly-inspired Agenda Reminder) */}
+        {!isLoading && focusTask && (
+          <aside
+            className={`${styles.focusCard} ${focusTask.reason.includes('Overdue') ? styles.focusCardUrgent : ''}`}
+            aria-label="Immediate priority task"
+          >
+            <div className={styles.focusLeft}>
+              <div className={styles.focusLabelRow}>
+                <span
+                  className={`${styles.focusBadge} ${focusTask.reason.includes('Overdue') ? styles.focusBadgeUrgent : ''}`}
+                >
+                  {focusTask.reason}
+                </span>
+                {focusTask.task.dueDate && (
+                  <span className={styles.focusDueText}>
+                    Deadline: {formatDueDate(focusTask.task.dueDate)}
+                  </span>
+                )}
+              </div>
+              <span className={styles.focusTitle}>{focusTask.task.title}</span>
+            </div>
+
+            <div className={styles.focusRight}>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<CheckIcon size={14} />}
+                onClick={() => handleQuickComplete(focusTask.task._id, focusTask.task.title)}
+              >
+                Mark Complete
+              </Button>
+              <Button
+                variant="subtle"
+                size="sm"
+                icon={<ArrowRightIcon size={14} />}
+                onClick={() => navigate('/')}
+              >
+                View on Board
+              </Button>
+            </div>
+          </aside>
+        )}
 
         {isLoading ? (
           <div className={styles.loadingContainer}>

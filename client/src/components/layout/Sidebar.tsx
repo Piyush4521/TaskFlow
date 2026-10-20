@@ -7,6 +7,7 @@ import {
   CheckCircleIcon,
   CalendarIcon,
   FileTextIcon,
+  UsersIcon,
   SettingsIcon,
   LogOutIcon,
   CloseIcon,
@@ -64,6 +65,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Calendar',
       path: '/calendar',
       icon: <CalendarIcon size={18} />,
+      isAvailable: true,
+    },
+    {
+      id: 'team',
+      label: 'Team',
+      path: '/team',
+      icon: <UsersIcon size={18} />,
       isAvailable: true,
     },
     {

@@ -666,3 +666,108 @@
     align-items: flex-start;
   }
 }
+
+/* Quick Navigation Bar */
+.quickNavBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.quickNavBar::-webkit-scrollbar {
+  display: none;
+}
+
+.quickNavLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.quickNavLink:hover {
+  background-color: var(--bg-surface-subtle);
+  border-color: var(--border-medium);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Immediate Focus Reminder Card */
+.focusCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.focusCardUrgent {
+  border-left-color: var(--color-danger);
+}
+
+.focusLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.focusLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.focusBadge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+}
+
+.focusBadgeUrgent {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+.focusDueText {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.focusTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.focusRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

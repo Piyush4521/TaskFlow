@@ -8,6 +8,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { OverviewPage } from './pages/OverviewPage';
 import { MyTasksPage } from './pages/MyTasksPage';
 import { CalendarPage } from './pages/CalendarPage';
+import { TeamPage } from './pages/TeamPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
@@ -36,6 +37,7 @@ export const App: React.FC = () => {
               <Route path="/tasks" element={<MyTasksPage />} />
               <Route path="/my-tasks" element={<Navigate to="/tasks" replace />} />
               <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/team" element={<TeamPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Route>

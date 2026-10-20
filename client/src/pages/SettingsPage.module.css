@@ -1,21 +1,21 @@
 .settingsContainer {
-  max-width: 1100px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 24px 24px 48px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 }
 
-/* Header Banner */
+/* Page Header */
 .pageHeader {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .pageTitle {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -25,6 +25,79 @@
   font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.5;
+}
+
+/* Sub-tabs Navigation */
+.tabsList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabsList::-webkit-scrollbar {
+  display: none;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.tabBtn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-subtle);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.tabBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.tabBtnActive {
+  color: var(--color-primary);
+  font-weight: 600;
+  border-bottom-color: var(--color-primary);
+}
+
+.tabBtnActive:hover {
+  background: none;
+}
+
+/* Success Banner */
+.feedbackBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: var(--color-done-bg);
+  border: 1px solid var(--color-done-border);
+  border-radius: var(--radius-md);
+  color: var(--color-done);
+  font-size: 13px;
+  font-weight: 500;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Section Card */
@@ -87,12 +160,12 @@
   margin-top: -6px;
 }
 
-/* Account Profile Card */
+/* Profile Layout */
 .profileCard {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 16px;
+  padding: 18px;
   background-color: var(--bg-surface-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -100,12 +173,12 @@
 }
 
 .avatarInitials {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: var(--text-inverse);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -125,7 +198,7 @@
 }
 
 .profileName {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -174,47 +247,89 @@
   border-radius: var(--radius-sm);
 }
 
-/* Details Table/Grid */
-.detailsGrid {
+/* Form Controls */
+.formGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
-.detailItem {
+.formGroup {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 14px;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
 }
 
-.detailLabel {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.formGroupFull {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.detailValue {
-  font-size: 14px;
+.label {
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
 }
 
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--bg-input, var(--bg-surface));
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.inputReadOnly {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.45;
+}
+
+.fieldHint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Button Row */
+.actionRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+/* User ID / Monospace Block */
 .monoSnippet {
   font-family: var(--font-mono, monospace);
   font-size: 12px;
   color: var(--text-secondary);
   background-color: var(--bg-surface-subtle);
-  padding: 2px 6px;
+  padding: 4px 8px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
   word-break: break-all;
@@ -227,7 +342,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 2px 8px;
   border-radius: var(--radius-sm);
   transition: background-color var(--transition-fast);
 }
@@ -259,7 +374,6 @@
   cursor: pointer;
   text-align: left;
   transition: all var(--transition-fast);
-  position: relative;
 }
 
 .themeCard:hover {
@@ -342,7 +456,6 @@
   line-height: 1.45;
 }
 
-/* Theme Preview Swatches */
 .previewSwatchLight {
   height: 48px;
   border-radius: var(--radius-sm);
@@ -393,7 +506,81 @@
   background-color: #64748b;
 }
 
-/* Security Posture Section */
+/* Notification Toggles List */
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  gap: 16px;
+}
+
+.toggleTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toggleTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.toggleDescription {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Switch Component */
+.switchBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  background-color: var(--border-strong);
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  flex-shrink: 0;
+  padding: 2px;
+}
+
+.switchBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.switchBtnActive {
+  background-color: var(--color-primary);
+}
+
+.switchHandle {
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switchHandleActive {
+  transform: translateX(20px);
+}
+
+/* Security Grid */
 .securityGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -438,7 +625,7 @@
   line-height: 1.45;
 }
 
-/* Callout Notice */
+/* Notice Box */
 .noticeBox {
   display: flex;
   align-items: flex-start;
@@ -508,43 +695,13 @@
   gap: 12px;
 }
 
-/* System & Legal Section */
-.systemGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.systemCard {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px;
-  background-color: var(--bg-surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-}
-
-.systemLabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.systemValue {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
+/* Legal Links */
 .legalLinksGroup {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 8px;
   font-size: 13px;
+  margin-top: 8px;
 }
 
 .legalLink {
@@ -565,7 +722,7 @@
 @media (max-width: 640px) {
   .settingsContainer {
     padding: 16px 16px 36px;
-    gap: 24px;
+    gap: 20px;
   }
 
   .settingsSection {
