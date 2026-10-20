@@ -175,7 +175,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <div className={styles.userText}>
                 <span className={styles.userName}>{user?.name || 'User'}</span>
                 <span className={styles.userEmail} title={user?.email}>
-                  {user?.email || 'user@taskflow.dev'}
+                  {user?.email || ''}
                 </span>
               </div>
             </div>

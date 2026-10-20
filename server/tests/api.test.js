@@ -9,6 +9,8 @@ import { registerValidator, loginValidator } from '../src/validators/authValidat
 import { createTaskValidator, updateTaskValidator, taskIdValidator } from '../src/validators/taskValidators.js';
 import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../src/controllers/taskController.js';
 import Task from '../src/models/Task.js';
+import TeamMember from '../src/models/TeamMember.js';
+import { getTeamMembers } from '../src/controllers/teamController.js';
 
 function mockRes() {
   return {
@@ -538,4 +540,55 @@ test('rateLimiter: taskMutationLimiter permits normal requests under the thresho
   } finally {
     server.close();
   }
+});
+
+test('TeamMember model: validates required name, role, email, and defaults', async () => {
+  const member = new TeamMember({
+    name: 'Ravi Mishra',
+    role: 'Founder',
+    email: 'ravi.mishra@example.com',
+  });
+
+  await member.validate();
+  assert.equal(member.isFixture, true);
+  assert.equal(member.source, 'development_seed');
+  assert.equal(member.department, 'General');
+
+  // Rejects missing required fields
+  const invalid = new TeamMember({});
+  let threw = false;
+  try {
+    await invalid.validate();
+  } catch (err) {
+    threw = true;
+    assert.ok(err.errors.name);
+    assert.ok(err.errors.role);
+    assert.ok(err.errors.email);
+  }
+  assert.equal(threw, true);
+});
+
+test('teamController: getTeamMembers retrieves team members sorted by createdAt', async () => {
+  const origFind = TeamMember.find;
+  const mockMembers = [
+    { name: 'Ravi Mishra', role: 'Founder', email: 'ravi.mishra@example.com', isFixture: true },
+    { name: 'Minati Tigga', role: 'Human Resources Professional', email: 'minati.tigga@example.com', isFixture: true },
+  ];
+
+  TeamMember.find = () => ({
+    sort: (_order) => ({
+      lean: () => Promise.resolve(mockMembers),
+    }),
+  });
+
+  const res = mockRes();
+  await getTeamMembers({}, res, () => {});
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.data.success, true);
+  assert.equal(res.data.count, 2);
+  assert.equal(res.data.data.length, 2);
+  assert.equal(res.data.data[0].name, 'Ravi Mishra');
+
+  TeamMember.find = origFind;
 });

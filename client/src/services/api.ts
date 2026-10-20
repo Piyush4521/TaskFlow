@@ -5,10 +5,13 @@ import {
   TasksResponse,
   SingleTaskResponse,
   DeleteTaskResponse,
+  TeamMembersResponse,
 } from '../types/api';
 import { TaskStatus, TaskPriority } from '../types/task';
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000').replace(/\/+$/, '');
+const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL;
+// In production builds, do not fall back to localhost. If unconfigured, use relative origin.
+const BASE_URL = (configuredBaseUrl || (import.meta.env.PROD ? '' : 'http://localhost:5000')).replace(/\/+$/, '');
 
 export class ApiClientError extends Error {
   status: number;
@@ -156,5 +159,10 @@ export const api = {
 
     delete: (token: string, id: string) =>
       request<DeleteTaskResponse>(`/api/tasks/${id}`, { method: 'DELETE' }, token),
+  },
+
+  team: {
+    list: (token: string) =>
+      request<TeamMembersResponse>('/api/team', { method: 'GET' }, token),
   },
 };

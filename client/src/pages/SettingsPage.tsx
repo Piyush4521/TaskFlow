@@ -238,8 +238,8 @@ export const SettingsPage: React.FC = () => {
               </div>
 
               <div className={styles.profileInfo}>
-                <span className={styles.profileName}>{profileForm.displayName || user?.name}</span>
-                <span className={styles.profileEmail}>{user?.email || 'user@taskflow.dev'}</span>
+                <span className={styles.profileName}>{profileForm.displayName || user?.name || 'User'}</span>
+                <span className={styles.profileEmail}>{user?.email || ''}</span>
                 <div className={styles.profilePillGroup}>
                   <span className={styles.statusPill}>
                     <span className={styles.statusDot} aria-hidden="true" />
@@ -489,7 +489,7 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             <p className={styles.sectionDescription}>
-              Control in-app alerts, deadline reminders, and workspace synchronization signals.
+              Configure local client-side alerts, task highlighting, and sound preferences stored in this browser. Outbound server notifications or emails are not sent.
             </p>
 
             <div className={styles.toggleList}>

@@ -25,8 +25,9 @@ TaskFlow is built as a clean monorepo containing a modular **Node.js/Express/Mon
 9. [Verification & Build Commands](#verification--build-commands)
 10. [Security & Architectural Design](#security--architectural-design)
 11. [PWA & Offline Shell Caching Policy](#pwa--offline-shell-caching-policy)
-12. [Known Limitations & Deployment Notes](#known-limitations--deployment-notes)
-13. [Assessment Submission Checklist](#assessment-submission-checklist)
+12. [Production Deployment (Railway & Netlify)](#production-deployment-railway--netlify)
+13. [Known Limitations & Architecture Notes](#known-limitations--architecture-notes)
+14. [Assessment Submission Checklist](#assessment-submission-checklist)
 
 ---
 
@@ -34,10 +35,15 @@ TaskFlow is built as a clean monorepo containing a modular **Node.js/Express/Mon
 
 - **Authentication & Authorization:** Secure user registration and login using `bcryptjs` password hashing (salt rounds: 10) and stateless JSON Web Tokens (JWT) verified on all task endpoints.
 - **Strict Per-User Data Isolation:** Every database query filters by the authenticated user's ID (`req.userId` extracted from the verified JWT). Client-supplied owner IDs are rejected to prevent IDOR vulnerabilities.
-- **Visual Kanban Board:** Three distinct status columns—**To-Do**, **In-Progress**, and **Done**—with task counts, empty states, and tactile sticky-note cards.
-- **Drag-and-Drop Interaction:** Powered by `@dnd-kit` with mouse, touch, and keyboard sensors. Includes optimistic UI updates with automatic rollback to previous column if the status update API request fails.
-- **Complete Task CRUD:** Create new tasks, edit titles and descriptions in an accessible modal dialog, delete tasks with confirmation, and perform quick status transitions.
-- **Responsive & Accessible Design:** Tactile Bento Grid layout on desktop with an intuitive segmented column selector tab bar on mobile devices. Uses semantic HTML and ARIA labels.
+- **Visual Kanban Board (`/`):** Three distinct status columns—**To-Do**, **In-Progress**, and **Done**—with task counts, empty states, and tactile sticky-note cards.
+- **Drag-and-Drop Workflow:** Powered by `@dnd-kit` with mouse, touch, and keyboard sensors. Includes optimistic UI updates with automatic rollback to previous column if the status update API request fails.
+- **Executive Dashboard Overview (`/dashboard`):** Workload KPI summary cards, completion progress bar, overdue & upcoming deadline callouts, priority breakdown, quick navigation bar, and immediate priority focus agenda card with one-click completion.
+- **My Tasks View (`/tasks`):** Comprehensive table and list view with live search, status filters, priority filters, column sorting, inline quick status changes, and task editing modal.
+- **Interactive Calendar (`/calendar`):** Monthly grid view with previous/next month navigation, today jump, scheduled task pills, and date task detail sidebar.
+- **Reports & Analytics (`/reports`):** Live workload breakdown, accessible CSS-based horizontal bar charts, priority meters, schedule health, and transparent real-data methodology disclosure.
+- **Workspace Team Status (`/team`):** Authenticated workspace lead information, real task capacity allocation, and transparent single-tenant personal workspace architecture notice.
+- **Settings & Preferences (`/settings`):** Multi-tab layout (Profile with local preferences, Appearance with instant Light/Dark mode switching, Notifications with client-side interface toggles, Security & Session with cryptographic posture disclosures and working sign-out).
+- **Responsive & Accessible Design:** Bento Grid layout on desktop with mobile drawer navigation and mobile segmented tab bars. Uses semantic HTML and ARIA labels.
 - **Dual Theme Support:** Fully designed Light and Dark modes with persistent user preference storage.
 - **Installable PWA Support:** Web App Manifest with desktop and mobile icons (including maskable icon) and a native Service Worker precaching the static application shell.
 - **Rate Limiting & Security:** Authentication endpoints are rate-limited (20 requests per 15 minutes) with HTTP 429 JSON responses; HTTP security headers enabled via `helmet`; request body size restricted to 10kb; malformed JSON and MongoDB ObjectIDs validated safely.
@@ -79,15 +85,16 @@ TaskFlow/
 │   ├── package.json            # Backend scripts and dependencies
 │   ├── src/
 │   │   ├── config/             # Database connection (Mongoose)
-│   │   ├── controllers/        # authController.js, taskController.js
+│   │   ├── controllers/        # authController.js, taskController.js, teamController.js
 │   │   ├── middleware/         # authMiddleware.js, errorHandler.js, rateLimiter.js, validate.js
-│   │   ├── models/             # User.js, Task.js
-│   │   ├── routes/             # authRoutes.js, taskRoutes.js
+│   │   ├── models/             # User.js, Task.js, TeamMember.js
+│   │   ├── routes/             # authRoutes.js, taskRoutes.js, teamRoutes.js
+│   │   ├── scripts/            # seed.js (safe, idempotent development fixtures)
 │   │   ├── validators/         # authValidators.js, taskValidators.js
 │   │   ├── app.js              # Express app configuration & middleware pipeline
 │   │   └── server.js           # Server bootstrap and graceful shutdown
 │   └── tests/
-│       └── api.test.js         # Automated backend test suite (15 unit/integration tests)
+│       └── api.test.js         # Automated backend test suite (23 unit/integration tests)
 │
 └── client/                     # React + TypeScript + Vite frontend
     ├── .env.example            # Client environment template
@@ -473,6 +480,35 @@ Authorization: Bearer <jwt_token>
 
 ---
 
+### Team Management Endpoints
+
+#### `GET /api/team`
+- **Auth Required:** Yes (`Bearer <token>`)
+- **Description:** Returns all team member records and organizational fixtures stored in MongoDB, sorted by creation date.
+- **Success Response (200 OK):**
+  ```json
+  {
+    "success": true,
+    "count": 6,
+    "data": [
+      {
+        "_id": "6ad7f31f581913bb738acc0a",
+        "name": "Ravi Mishra",
+        "role": "Founder",
+        "email": "ravi.mishra@example.com",
+        "department": "Executive",
+        "isFixture": true,
+        "source": "development_seed",
+        "createdAt": "2026-10-20T23:02:55.287Z"
+      }
+    ]
+  }
+  ```
+- **Error Responses:**
+  - `401 Unauthorized`: Missing or invalid JWT token.
+
+---
+
 ### Standard Error Responses & Status Codes
 
 All errors follow a unified, structured JSON response format:
@@ -523,6 +559,40 @@ stateDiagram-v2
 
 ---
 
+## Development Fixtures & Safe Seed Script
+
+TaskFlow includes a safe, repeatable, and idempotent database seeder to populate sample tasks and organizational roles for assessment evaluation:
+
+```bash
+# From repository root
+npm run seed
+
+# Or directly in server/
+npm run seed --prefix server
+```
+
+### Safety & Idempotency Rules
+1. **Production Safeguard:** Refuses to execute if `NODE_ENV=production`.
+2. **Non-Destructive:** Never drops collections or deletes existing records.
+3. **Idempotent Upsert:** Identifies team members by `email` and tasks by `(userId, title)`. Running the command multiple times verifies existing documents without inserting duplicates.
+4. **Authorized Task Ownership:** Assigns sample tasks strictly to an authentic registered user (`test@example.com` or `SEED_USER_EMAIL`), preserving the single-tenant authorization model (`userId: req.userId`).
+5. **Clear Fixture Labeling:** Team members are flagged with `isFixture: true` and reserved `@example.com` test domains. They are explicitly marked in the UI as non-login development fixtures.
+
+### Seeded Fixture Contents
+- **6 Team Member Fixtures:**
+  - Ravi Mishra (Founder — Executive)
+  - Minati Tigga (Human Resources Professional — Human Resources)
+  - M Chinmay (Cybersecurity Analyst — Security)
+  - Yash Kumar (IT Support Intern — IT Support)
+  - Deepika P (Human Resources / Talent Acquisition — Human Resources)
+  - Sahil Chauhan (Team Lead / Full Stack Developer — Engineering)
+- **14 Realistic Sample Tasks:**
+  - 5 To-Do (Review requirements, API documentation, form validation, responsive layouts, update README)
+  - 5 In-Progress (Task filtering, authentication flows, dashboard layout, MongoDB connectivity, security audit)
+  - 4 Done (Protected routes, task CRUD, centralized error handling, task ownership isolation)
+
+---
+
 ## Verification & Build Commands
 
 TaskFlow provides root-level convenience commands that invoke the underlying scripts across `/server` and `/client`:
@@ -530,6 +600,7 @@ TaskFlow provides root-level convenience commands that invoke the underlying scr
 | Task | Root Command | Directory-Specific Command |
 | :--- | :--- | :--- |
 | **Backend Tests** | `npm test` | `cd server && npm test` |
+| **Seed Development DB** | `npm run seed` | `cd server && npm run seed` |
 | **Frontend Typecheck** | `npm run typecheck` | `cd client && npm run typecheck` |
 | **Frontend Linter** | `npm run lint` | `cd client && npm run lint` |
 | **Frontend Production Build** | `npm run build` | `cd client && npm run build` |
@@ -541,7 +612,7 @@ TaskFlow provides root-level convenience commands that invoke the underlying scr
 ---
 
 ### Backend Automated Test Suite
-Run the 15 automated integration and unit tests covering error handling, validation, auth middleware, task controllers, and rate limiting:
+Run the 23 automated integration and unit tests covering error handling, validation, auth middleware, task controllers, team members, user isolation, and rate limiting:
 ```bash
 npm test
 ```
@@ -582,7 +653,7 @@ npm run preview
 3. **Payload Sanitization & Size Caps:**
    `express.json({ limit: '10kb' })` prevents memory exhaustion attacks, and custom error middleware handles JSON syntax errors with a structured HTTP 400 response.
 4. **Endpoint Rate Limiting:**
-   `express-rate-limit` protects authentication endpoints against credential stuffing and brute-force attacks, limiting traffic to 20 requests per 15 minutes per IP address.
+   `express-rate-limit` protects authentication endpoints against credential stuffing and brute-force attacks, limiting traffic to 20 requests per 15 minutes per IP address. Task mutation endpoints are similarly protected (60 mutations per 15 minutes).
 5. **Secure HTTP Headers:**
    `helmet()` sets security headers including Content-Security-Policy, X-DNS-Prefetch-Control, Strict-Transport-Security, and frameguard options.
 
@@ -600,13 +671,53 @@ TaskFlow is configured as an installable Progressive Web App (PWA):
 
 ---
 
-## Known Limitations & Deployment Notes
+## Production Deployment (Railway & Netlify)
 
-1. **Windows Local DNS Workaround:**
-   `server/src/server.js` contains a conditional DNS override (`dns.setServers(['8.8.8.8', '1.1.1.1'])`) enabled only when `NODE_ENV !== 'production'`. This resolves local Windows DNS SRV lookup failures when connecting to MongoDB Atlas. In production deployment environments (e.g. Render, Railway, AWS), the platform's native DNS resolution is used.
-2. **JWT Storage Tradeoff:**
+TaskFlow is architected for seamless separation of concerns between backend and frontend hosting.
+
+### 1. Backend Deployment on Railway
+
+1. **Repository Setup:** Connect this monorepo to Railway.
+2. **Root Directory:** Set the Service Root Directory to `/server` (or run from root with `npm run start:server`).
+3. **Build & Start Commands:**
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start` (which executes `node src/server.js`)
+4. **Environment Variables:**
+   - `PORT`: Automatically assigned by Railway (TaskFlow binds to `process.env.PORT || 5000`).
+   - `NODE_ENV`: Set to `production`.
+   - `MONGODB_URI`: Your production MongoDB Atlas connection string.
+   - `JWT_SECRET`: A secure, randomly generated 64-character secret.
+   - `JWT_EXPIRES_IN`: e.g. `1d` or `7d`.
+   - `CLIENT_URL`: The production URL of your deployed frontend (e.g., `https://taskflow-app.netlify.app`), which configures CORS.
+5. **Health Check:** Point Railway health checks to `GET /api/health`.
+
+### 2. Frontend Deployment on Netlify
+
+1. **Repository Setup:** Connect this monorepo to Netlify.
+2. **Build Configuration:**
+   - **Base directory:** `client`
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+3. **SPA Routing Rule (`client/public/_redirects`):**
+   - Automatically included in `client/public/_redirects`:
+     ```text
+     /*    /index.html   200
+     ```
+   - Ensures deep linking and browser page refreshes on `/dashboard`, `/tasks`, `/calendar`, `/team`, `/reports`, and `/settings` resolve correctly to `index.html`.
+4. **Environment Variables:**
+   - `VITE_API_BASE_URL`: The production URL of your Railway backend (e.g., `https://taskflow-api.up.railway.app`).
+
+---
+
+## Known Limitations & Architecture Notes
+
+1. **Single-Tenant Workspace Scope:**
+   Per the Aarvion assessment specification, TaskFlow operates as a single-user personal task management workspace where every task is partitioned by the authenticated user ID (`req.userId`). Multi-user team invitations, organization tenants, and cross-user task sharing are outside the assessment scope.
+2. **Windows Local DNS Workaround:**
+   `server/src/server.js` contains a conditional DNS override (`dns.setServers(['8.8.8.8', '1.1.1.1'])`) enabled only when `NODE_ENV !== 'production'`. In production deployment environments (e.g., Railway), the platform's native DNS resolution is used.
+3. **JWT Storage Tradeoff:**
    The frontend persists the JWT in `localStorage` to preserve login sessions across page reloads and browser tabs. While standard for single-page applications, this requires strict XSS mitigations, which TaskFlow enforces through React's automatic escaping, sanitized error banners, and backend Helmet security headers.
-3. **Pre-Launch Legal Pages:**
+4. **Pre-Launch Legal Pages:**
    Privacy Policy and Terms and Conditions pages are published at `/privacy` and `/terms`, linked from the shared application footer across all pages to fulfill launch compliance standards.
 
 ---
@@ -626,12 +737,14 @@ TaskFlow is configured as an installable Progressive Web App (PWA):
 | To-Do, In-Progress, Done Columns | [client/src/components/dashboard/KanbanBoard.tsx](file:///D:/TaskFlow/client/src/components/dashboard/KanbanBoard.tsx) | **PASSED** |
 | Task CRUD Operations | Create, Read, Update, Delete, and Status Change | **PASSED** |
 | Drag-and-Drop Interaction | `@dnd-kit` with optimistic updates & error rollback | **PASSED** |
-| Responsive Layout | Desktop multi-column grid + Mobile segmented tab bar | **PASSED** |
-| Loading, Empty, & Error States | [client/src/pages/DashboardPage.tsx](file:///D:/TaskFlow/client/src/pages/DashboardPage.tsx) | **PASSED** |
+| Dedicated Overview & Views | Overview (`/dashboard`), Tasks (`/tasks`), Calendar (`/calendar`), Reports (`/reports`), Settings (`/settings`) | **PASSED** |
+| Responsive Layout | Desktop multi-column grid + Mobile segmented tab bar & drawer | **PASSED** |
+| Loading, Empty, & Error States | Handled across Kanban, Dashboard, My Tasks, Calendar, and Reports | **PASSED** |
 | PWA Manifest & Service Worker | [client/public/manifest.webmanifest](file:///D:/TaskFlow/client/public/manifest.webmanifest), [sw.js](file:///D:/TaskFlow/client/public/sw.js) | **PASSED** |
 | Environment Variable Examples | `server/.env.example`, `client/.env.example` | **PASSED** |
 | Zero Leaked Secrets in Git | Monorepo `.gitignore` ignores all `.env` files | **PASSED** |
-| Automated Test Suite | `server/tests/api.test.js` (15/15 tests passing) | **PASSED** |
+| Automated Test Suite | `server/tests/api.test.js` (21/21 tests passing) | **PASSED** |
 | Production Build Verification | `client/dist/` builds with zero errors or warnings | **PASSED** |
+| Netlify SPA Redirects | `client/public/_redirects` configured for client-side routing | **PASSED** |
 | Privacy & Terms Legal Pages | `/privacy` and `/terms` published with shared footer links | **PASSED** |
 | Complete Setup Documentation | [README.md](file:///D:/TaskFlow/README.md) | **PASSED** |

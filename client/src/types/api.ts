@@ -41,3 +41,21 @@ export interface DeleteTaskResponse {
   success: true;
   message: string;
 }
+
+export interface TeamMember {
+  _id: string;
+  name: string;
+  role: string;
+  email: string;
+  department: string;
+  isFixture: boolean;
+  source: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface TeamMembersResponse {
+  success: true;
+  count: number;
+  data: TeamMember[];
+}

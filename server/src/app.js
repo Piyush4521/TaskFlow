@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
+import teamRoutes from './routes/teamRoutes.js';
 import { notFoundHandler, errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -31,6 +32,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/team', teamRoutes);
 
 app.use(notFoundHandler);
 
