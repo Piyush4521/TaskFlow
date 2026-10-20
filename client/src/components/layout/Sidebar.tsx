@@ -64,8 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Calendar',
       path: '/calendar',
       icon: <CalendarIcon size={18} />,
-      isAvailable: false,
-      badge: 'Soon',
+      isAvailable: true,
     },
     {
       id: 'reports',
