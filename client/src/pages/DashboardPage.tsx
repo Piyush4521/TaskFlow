@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Task, TaskStatus, TaskPriority } from '../types/task';
 import { useAuth } from '../context/useAuth';
 import { api, ApiClientError } from '../services/api';
-import { Navbar } from '../components/common/Navbar';
-import { Footer } from '../components/common/Footer';
+import { AppShell } from '../components/layout/AppShell';
 import { BentoHeader } from '../components/dashboard/BentoHeader';
 import { KanbanBoard } from '../components/dashboard/KanbanBoard';
 import { TaskModal } from '../components/dashboard/TaskModal';
@@ -189,55 +188,51 @@ export const DashboardPage: React.FC = () => {
   });
 
   return (
-    <div className={styles.pageWrapper}>
-      <Navbar />
-
-      <main className={styles.mainContent}>
-        <div className={styles.contentContainer}>
-          {errorMessage && (
-            <div className={styles.errorBanner} role="alert">
-              <div className={styles.errorBannerContent}>
-                <AlertCircleIcon size={18} />
-                <span>{errorMessage}</span>
-              </div>
-              <Button variant="secondary" size="sm" onClick={handleRetry}>
-                Retry
-              </Button>
+    <AppShell title="Board" badge="Live">
+      <div className={styles.contentContainer}>
+        {errorMessage && (
+          <div className={styles.errorBanner} role="alert">
+            <div className={styles.errorBannerContent}>
+              <AlertCircleIcon size={18} />
+              <span>{errorMessage}</span>
             </div>
-          )}
+            <Button variant="secondary" size="sm" onClick={handleRetry}>
+              Retry
+            </Button>
+          </div>
+        )}
 
-          {successToast && (
-            <div className={styles.successToast} role="status">
-              <CheckCircleIcon size={16} />
-              <span>{successToast}</span>
-            </div>
-          )}
+        {successToast && (
+          <div className={styles.successToast} role="status">
+            <CheckCircleIcon size={16} />
+            <span>{successToast}</span>
+          </div>
+        )}
 
-          <BentoHeader
-            tasks={tasks}
-            onOpenCreateModal={() => handleOpenCreateModal('To-Do')}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
+        <BentoHeader
+          tasks={tasks}
+          onOpenCreateModal={() => handleOpenCreateModal('To-Do')}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+
+        {isLoading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner} />
+            <span>Loading tasks from server...</span>
+          </div>
+        ) : (
+          <KanbanBoard
+            tasks={filteredTasks}
+            savingTaskIds={savingTaskIds}
+            onAddTask={handleOpenCreateModal}
+            onEditTask={handleOpenEditModal}
+            onDeleteTask={handleDeleteTask}
+            onStatusChange={handleStatusChange}
+            onTaskMove={handleStatusChange}
           />
-
-          {isLoading ? (
-            <div className={styles.loadingContainer}>
-              <div className={styles.spinner} />
-              <span>Loading tasks from server...</span>
-            </div>
-          ) : (
-            <KanbanBoard
-              tasks={filteredTasks}
-              savingTaskIds={savingTaskIds}
-              onAddTask={handleOpenCreateModal}
-              onEditTask={handleOpenEditModal}
-              onDeleteTask={handleDeleteTask}
-              onStatusChange={handleStatusChange}
-              onTaskMove={handleStatusChange}
-            />
-          )}
-        </div>
-      </main>
+        )}
+      </div>
 
       <TaskModal
         isOpen={isModalOpen}
@@ -246,8 +241,6 @@ export const DashboardPage: React.FC = () => {
         initialTask={editingTask}
         defaultStatus={defaultModalStatus}
       />
-
-      <Footer />
-    </div>
+    </AppShell>
   );
 };
