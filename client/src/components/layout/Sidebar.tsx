@@ -50,8 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Dashboard',
       path: '/dashboard',
       icon: <LayoutDashboardIcon size={18} />,
-      isAvailable: false,
-      badge: 'Soon',
+      isAvailable: true,
     },
     {
       id: 'my-tasks',

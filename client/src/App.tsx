@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import { TaskProvider } from './context/TaskContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { DashboardPage } from './pages/DashboardPage';
+import { OverviewPage } from './pages/OverviewPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { PrivacyPage } from './pages/PrivacyPage';
@@ -27,6 +28,7 @@ export const App: React.FC = () => {
               }
             >
               <Route path="/" element={<DashboardPage />} />
+              <Route path="/dashboard" element={<OverviewPage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />

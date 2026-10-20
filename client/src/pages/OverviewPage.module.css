@@ -1,0 +1,668 @@
+.contentContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 20px 48px;
+}
+
+/* Error Banner */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.errorBannerContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Success Toast */
+.successToast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--color-done-border);
+  color: var(--color-done);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-modal);
+  z-index: 100;
+  animation: slideUp 200ms ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading Container */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 360px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-medium);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hero / Header Card */
+.headerCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-bento);
+}
+
+.headerInfo {
+  max-width: 640px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metricCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-bento);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-bento-hover);
+}
+
+.metricHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metricLabel {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.metricIconWrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-secondary);
+}
+
+.todoIcon {
+  color: var(--color-todo);
+  background-color: var(--color-todo-bg);
+}
+
+.progIcon {
+  color: var(--color-prog);
+  background-color: var(--color-prog-bg);
+}
+
+.doneIcon {
+  color: var(--color-done);
+  background-color: var(--color-done-bg);
+}
+
+.metricValue {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+.metricSubtext {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Two-Column Midsection Grid */
+.sectionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Base Bento Card */
+.bentoCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow-bento);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cardBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.alertBadge {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+
+/* Progress Bar & Stat */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progressInfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.progressPercentage {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.progressFraction {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 10px;
+  background-color: var(--bg-surface-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: var(--color-done);
+  transition: width 300ms ease;
+}
+
+/* Breakdown Lists */
+.breakdownList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.breakdownLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.statusIndicatorDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.todoDot {
+  background-color: var(--color-todo);
+}
+
+.progDot {
+  background-color: var(--color-prog);
+}
+
+.doneDot {
+  background-color: var(--color-done);
+}
+
+.breakdownValues {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.breakdownCount {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.breakdownPercent {
+  color: var(--text-muted);
+  font-size: 12px;
+  min-width: 38px;
+  text-align: right;
+}
+
+.segmentedBar {
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  background-color: var(--bg-surface-subtle);
+  margin-top: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.segmentTodo {
+  background-color: var(--color-todo);
+  transition: width 300ms ease;
+}
+
+.segmentProg {
+  background-color: var(--color-prog);
+  transition: width 300ms ease;
+}
+
+.segmentDone {
+  background-color: var(--color-done);
+  transition: width 300ms ease;
+}
+
+/* Priority Pills Grid */
+.priorityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.priorityItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-size: 13px;
+}
+
+.priorityLabelGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.prioUrgent {
+  background-color: var(--priority-urgent-bg);
+  border-color: var(--priority-urgent-border);
+  color: var(--priority-urgent-text);
+}
+
+.prioHigh {
+  background-color: var(--priority-high-bg);
+  border-color: var(--priority-high-border);
+  color: var(--priority-high-text);
+}
+
+.prioMed {
+  background-color: var(--priority-med-bg);
+  border-color: var(--priority-med-border);
+  color: var(--priority-med-text);
+}
+
+.prioLow {
+  background-color: var(--priority-low-bg);
+  border-color: var(--priority-low-border);
+  color: var(--priority-low-text);
+}
+
+.priorityCount {
+  font-weight: 700;
+}
+
+/* Attention / Task Item Lists */
+.taskItemList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.taskItemLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.taskItemLink:hover {
+  background-color: var(--bg-surface);
+  border-color: var(--border-medium);
+  transform: translateX(2px);
+  text-decoration: none;
+}
+
+.taskItemLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.taskItemTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskItemMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.taskItemRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.overdueTag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-border);
+}
+
+.upcomingTag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-prog-bg);
+  color: var(--color-prog);
+  border: 1px solid var(--color-prog-border);
+}
+
+/* Empty State Box */
+.emptyStateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  background-color: var(--bg-surface-subtle);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  gap: 8px;
+}
+
+.emptyStateTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.emptyStateText {
+  font-size: 13px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+/* Recent Tasks Table / List */
+.recentTableWrapper {
+  overflow-x: auto;
+}
+
+.recentTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.recentTable th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.recentTable td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.recentTable tr:hover td {
+  background-color: var(--bg-surface-subtle);
+}
+
+.tableTitleLink {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: none;
+  display: block;
+}
+
+.tableTitleLink:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.tableStatusBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badgeTodo {
+  background-color: var(--color-todo-bg);
+  color: var(--color-todo);
+  border: 1px solid var(--color-todo-border);
+}
+
+.badgeProg {
+  background-color: var(--color-prog-bg);
+  color: var(--color-prog);
+  border: 1px solid var(--color-prog-border);
+}
+
+.badgeDone {
+  background-color: var(--color-done-bg);
+  color: var(--color-done);
+  border: 1px solid var(--color-done-border);
+}
+
+.tableActionLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.tableActionLink:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sectionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .contentContainer {
+    padding: 16px 12px 36px;
+    gap: 16px;
+  }
+
+  .headerCard {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .headerActions > button,
+  .headerActions > a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .priorityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .errorBanner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
