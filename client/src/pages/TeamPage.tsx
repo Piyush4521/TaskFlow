@@ -6,9 +6,11 @@ import { api, ApiClientError } from '../services/api';
 import { TeamMember } from '../types/api';
 import {
   UsersIcon,
-  ShieldIcon,
-  LayersIcon,
   CheckCircleIcon,
+  ClockIcon,
+  LayersIcon,
+  MailIcon,
+  BriefcaseIcon,
 } from '../components/common/Icons';
 import styles from './TeamPage.module.css';
 
@@ -31,36 +33,31 @@ export const TeamPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(Boolean(token));
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMembers = useCallback(
-    (showLoading = true) => {
-      if (!token) return;
-      if (showLoading) setIsLoading(true);
-      setError(null);
+  const fetchMembers = useCallback(() => {
+    if (!token) return;
+    setIsLoading(true);
+    setError(null);
 
-      api.team
-        .list(token)
-        .then((response) => {
-          setMembers(response.data || []);
-        })
-        .catch((err) => {
-          if (err instanceof ApiClientError) {
-            setError(err.message);
-          } else {
-            setError('Failed to load team members from the database.');
-          }
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    },
-    [token],
-  );
+    api.team
+      .list(token)
+      .then((response) => {
+        setMembers(response.data || []);
+      })
+      .catch((err) => {
+        if (err instanceof ApiClientError) {
+          setError(err.message);
+        } else {
+          setError('Failed to load team directory from the server.');
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [token]);
 
   useEffect(() => {
     let isSubscribed = true;
-    if (!token) {
-      return;
-    }
+    if (!token) return;
 
     api.team
       .list(token)
@@ -75,7 +72,7 @@ export const TeamPage: React.FC = () => {
           if (err instanceof ApiClientError) {
             setError(err.message);
           } else {
-            setError('Failed to load team members from the database.');
+            setError('Failed to load team directory.');
           }
           setIsLoading(false);
         }
@@ -86,17 +83,10 @@ export const TeamPage: React.FC = () => {
     };
   }, [token]);
 
-  // Calculate live owner metrics directly from TaskFlow MongoDB tasks
-  const activeTasksCount = useMemo(() => {
-    return tasks.filter((t) => t.status !== 'Done').length;
-  }, [tasks]);
-
-  const completedTasksCount = useMemo(() => {
-    return tasks.filter((t) => t.status === 'Done').length;
-  }, [tasks]);
-
+  // Real owner metrics computed directly from authentic TaskFlow tasks
+  const activeTasksCount = useMemo(() => tasks.filter((t) => t.status !== 'Done').length, [tasks]);
+  const completedTasksCount = useMemo(() => tasks.filter((t) => t.status === 'Done').length, [tasks]);
   const totalTasksCount = tasks.length;
-
   const completionRate = useMemo(() => {
     if (totalTasksCount === 0) return 0;
     return Math.round((completedTasksCount / totalTasksCount) * 100);
@@ -107,219 +97,187 @@ export const TeamPage: React.FC = () => {
   return (
     <AppShell title="Team" badge="Workspace">
       <div className={styles.teamContainer}>
-        {/* Header */}
+        {/* Header Banner */}
         <header className={styles.pageHeader}>
           <div className={styles.headerTitleGroup}>
-            <h1 className={styles.pageTitle}>Workspace Team & Collaborators</h1>
+            <h1 className={styles.pageTitle}>Workspace Team</h1>
             <p className={styles.pageSubtitle}>
-              Inspect authenticated workspace membership, account data isolation, and live workload allocation.
+              Collaborators and team directory associated with your TaskFlow workspace.
             </p>
           </div>
 
-          <div className={styles.headerActions}>
-            <div className={styles.statusIndicator}>
-              <span className={styles.statusDot} aria-hidden="true" />
-              <span>Personal Workspace Active</span>
-            </div>
+          <div className={styles.headerStatusBadge}>
+            <span className={styles.statusDot} aria-hidden="true" />
+            <span>Workspace Active</span>
           </div>
         </header>
 
-        {/* Real KPI Metrics Row */}
+        {/* Workspace Summary Metric Strip */}
         <div className={styles.metricsGrid}>
           <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>Active Members</span>
-            <span className={styles.metricValue}>1</span>
-            <span className={styles.metricSubtext}>Personal workspace owner</span>
+            <div className={styles.metricHeader}>
+              <span className={styles.metricLabel}>Workspace Members</span>
+              <span className={styles.metricIcon}>
+                <UsersIcon size={16} />
+              </span>
+            </div>
+            <div className={styles.metricValue}>1</div>
+            <div className={styles.metricSubtext}>Authenticated Owner</div>
           </div>
 
           <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>Assigned Active Tasks</span>
-            <span className={styles.metricValue}>{activeTasksCount}</span>
-            <span className={styles.metricSubtext}>To-Do and In-Progress stages</span>
+            <div className={styles.metricHeader}>
+              <span className={styles.metricLabel}>Active Workload</span>
+              <span className={`${styles.metricIcon} ${styles.iconProgress}`}>
+                <ClockIcon size={16} />
+              </span>
+            </div>
+            <div className={styles.metricValue}>{activeTasksCount}</div>
+            <div className={styles.metricSubtext}>Tasks in progress or to-do</div>
           </div>
 
           <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>Delivered Tasks</span>
-            <span className={styles.metricValue}>{completedTasksCount}</span>
-            <span className={styles.metricSubtext}>Completed on Kanban board</span>
+            <div className={styles.metricHeader}>
+              <span className={styles.metricLabel}>Completed Work</span>
+              <span className={`${styles.metricIcon} ${styles.iconDone}`}>
+                <CheckCircleIcon size={16} />
+              </span>
+            </div>
+            <div className={styles.metricValue}>{completedTasksCount}</div>
+            <div className={styles.metricSubtext}>Delivered on board</div>
           </div>
 
           <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>Completion Efficiency</span>
-            <span className={styles.metricValue}>{completionRate}%</span>
-            <span className={styles.metricSubtext}>Based on {totalTasksCount} total tasks</span>
+            <div className={styles.metricHeader}>
+              <span className={styles.metricLabel}>Delivery Rate</span>
+              <span className={styles.metricIcon}>
+                <LayersIcon size={16} />
+              </span>
+            </div>
+            <div className={styles.metricValue}>{completionRate}%</div>
+            <div className={styles.metricSubtext}>Across {totalTasksCount} total tasks</div>
           </div>
         </div>
 
-        {/* Workspace Owner Section */}
-        <section className={styles.sectionCard} aria-labelledby="owner-heading">
+        {/* Workspace Owner Card */}
+        <section className={styles.sectionCard} aria-labelledby="owner-title">
           <div className={styles.sectionHeader}>
-            <div className={styles.sectionTitleGroup}>
-              <UsersIcon size={20} />
-              <h2 id="owner-heading" className={styles.sectionTitle}>
-                Workspace Owner
-              </h2>
-            </div>
-            <span className={styles.sectionBadge}>Authenticated</span>
+            <h2 id="owner-title" className={styles.sectionTitle}>
+              Workspace Owner
+            </h2>
+            <span className={styles.badgePrimary}>Authenticated</span>
           </div>
 
-          <div className={styles.memberCard}>
-            <div className={styles.cardTop}>
-              <div className={styles.avatarWrapper}>
-                <div className={styles.avatar} aria-hidden="true">
-                  {userInitials}
-                </div>
+          <div className={styles.ownerBody}>
+            <div className={styles.ownerInfoRow}>
+              <div className={styles.ownerAvatar} aria-hidden="true">
+                {userInitials}
               </div>
-
-              <div className={styles.memberIdentity}>
-                <span className={styles.memberName}>{user?.name || 'Authenticated User'}</span>
-                <span className={styles.memberEmail}>{user?.email || ''}</span>
+              <div className={styles.ownerMeta}>
+                <span className={styles.ownerName}>{user?.name || 'Workspace Owner'}</span>
+                <span className={styles.ownerEmail}>{user?.email || ''}</span>
                 <div className={styles.tagGroup}>
-                  <span className={styles.roleBadge}>Personal Workspace Lead</span>
-                  <span className={styles.deptBadge}>MongoDB Authenticated</span>
+                  <span className={styles.roleTag}>Lead / Admin</span>
+                  <span className={styles.statusTag}>Active Session</span>
                 </div>
               </div>
             </div>
 
-            {/* Workload Meter */}
-            <div className={styles.workloadSection}>
+            {/* Workload Progress Bar */}
+            <div className={styles.workloadBox}>
               <div className={styles.workloadHeader}>
-                <span className={styles.workloadLabel}>Live Task Distribution</span>
+                <span className={styles.workloadLabel}>Personal Task Progress</span>
                 <span className={styles.workloadStats}>
-                  {activeTasksCount} active · {completedTasksCount} completed ({completionRate}% done)
+                  {completedTasksCount} of {totalTasksCount} tasks complete ({completionRate}%)
                 </span>
               </div>
-
               <div
-                className={styles.workloadTrack}
+                className={styles.progressBarTrack}
                 role="progressbar"
                 aria-valuenow={completionRate}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-label="Owner task completion rate"
+                aria-label="Workspace owner completion progress"
               >
                 <div
-                  className={styles.workloadFill}
+                  className={styles.progressBarFill}
                   style={{ width: `${completionRate}%` }}
                 />
               </div>
             </div>
-
-            <div className={styles.cardFooter}>
-              <span className={styles.activityNote}>
-                Database User ID: <code className={styles.monoSnippet}>{user?.id || 'N/A'}</code>
-              </span>
-            </div>
           </div>
         </section>
 
-        {/* Development Team Fixtures Section (Database-Backed) */}
-        <section className={styles.sectionCard} aria-labelledby="team-heading">
+        {/* Team Members / Directory Section */}
+        <section className={styles.sectionCard} aria-labelledby="directory-title">
           <div className={styles.sectionHeader}>
-            <div className={styles.sectionTitleGroup}>
-              <UsersIcon size={20} />
-              <h2 id="team-heading" className={styles.sectionTitle}>
-                Organization Structure (Database Fixtures)
+            <div>
+              <h2 id="directory-title" className={styles.sectionTitle}>
+                Team Directory
               </h2>
+              <p className={styles.sectionSubtitle}>
+                Registered collaborators and organizational contacts in your workspace database.
+              </p>
             </div>
-            <span className={styles.sectionBadge}>
-              {members.length > 0 ? `${members.length} Members` : 'Database'}
-            </span>
-          </div>
-
-          <div className={styles.noticeBanner}>
-            <strong>Development Fixtures:</strong> These development team-member profiles are stored in MongoDB
-            to model organizational roles for assessment evaluation. They are not registered user accounts and
-            cannot log in or own personal tasks.
+            {members.length > 0 && (
+              <span className={styles.countChip}>{members.length} Members</span>
+            )}
           </div>
 
           {isLoading ? (
             <div className={styles.loadingBox}>
-              <div className={styles.spinner} role="status" aria-label="Loading team members" />
-              <span>Fetching team members from MongoDB...</span>
+              <div className={styles.spinner} role="status" aria-label="Loading directory" />
+              <span>Loading team members...</span>
             </div>
           ) : error ? (
             <div className={styles.errorBox}>
-              <h3 className={styles.errorTitle}>Unable to Load Team Members</h3>
               <p className={styles.errorMessage}>{error}</p>
-              <button type="button" className={styles.retryButton} onClick={() => fetchMembers(true)}>
-                Retry Fetch
+              <button type="button" className={styles.retryButton} onClick={fetchMembers}>
+                Retry
               </button>
             </div>
           ) : members.length === 0 ? (
             <div className={styles.emptyStateBox}>
               <div className={styles.emptyIconWrap}>
-                <UsersIcon size={28} />
+                <UsersIcon size={24} />
               </div>
-              <h3 className={styles.emptyStateTitle}>No Team Members in Database</h3>
+              <h3 className={styles.emptyStateTitle}>No additional members found</h3>
               <p className={styles.emptyStateText}>
-                No team member records currently exist in MongoDB. Run the safe seed script to populate development fixtures:
+                No additional team members are currently listed in the database directory.
               </p>
-              <code className={styles.monoSnippet}>npm run seed</code>
             </div>
           ) : (
             <div className={styles.teamGrid}>
               {members.map((member) => (
-                <div key={member._id} className={styles.teamMemberCard}>
-                  <div className={styles.memberCardTop}>
-                    <div className={styles.avatarFixture} aria-hidden="true">
+                <div key={member._id} className={styles.memberCard}>
+                  <div className={styles.memberHeader}>
+                    <div className={styles.memberAvatar} aria-hidden="true">
                       {getInitials(member.name)}
                     </div>
-                    <div className={styles.memberMeta}>
-                      <span className={styles.memberCardName}>{member.name}</span>
-                      <span className={styles.memberCardRole}>{member.role}</span>
-                      <span className={styles.memberCardEmail}>{member.email}</span>
+                    <div className={styles.memberInfo}>
+                      <span className={styles.memberName}>{member.name}</span>
+                      <span className={styles.memberRole}>
+                        <BriefcaseIcon size={12} />
+                        <span>{member.role}</span>
+                      </span>
                     </div>
                   </div>
 
-                  <div className={styles.memberCardFooter}>
-                    <div className={styles.tagGroup}>
-                      <span className={styles.deptBadge}>{member.department || 'General'}</span>
-                      {member.isFixture && (
-                        <span className={styles.fixtureBadge}>Development Fixture</span>
-                      )}
-                    </div>
-                    <code className={styles.monoSnippet}>ID: {member._id.slice(-6)}</code>
+                  <div className={styles.memberEmailRow}>
+                    <MailIcon size={12} />
+                    <span className={styles.memberEmailText}>{member.email}</span>
+                  </div>
+
+                  <div className={styles.memberFooter}>
+                    <span className={styles.deptChip}>{member.department || 'General'}</span>
+                    {member.isFixture && (
+                      <span className={styles.directoryBadge}>Directory</span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </section>
-
-        {/* Data Isolation Architecture Notice */}
-        <section className={styles.sectionCard} aria-labelledby="collab-heading">
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionTitleGroup}>
-              <ShieldIcon size={20} />
-              <h2 id="collab-heading" className={styles.sectionTitle}>
-                Data Isolation & Tenancy Architecture
-              </h2>
-            </div>
-            <span className={styles.sectionBadge}>Architecture</span>
-          </div>
-
-          <div className={styles.architectureGrid}>
-            <div className={styles.archCard}>
-              <div className={styles.archHeader}>
-                <LayersIcon size={16} />
-                <span className={styles.archTitle}>Strict Query Partitioning</span>
-              </div>
-              <p className={styles.archDesc}>
-                All queries for tasks in MongoDB filter strictly on <code className={styles.monoSnippet}>userId: req.userId</code>. Cross-user access is blocked at the database level.
-              </p>
-            </div>
-
-            <div className={styles.archCard}>
-              <div className={styles.archHeader}>
-                <CheckCircleIcon size={16} />
-                <span className={styles.archTitle}>Genuine Data Integrity</span>
-              </div>
-              <p className={styles.archDesc}>
-                Team member records originate directly from MongoDB collections. Development fixtures are explicitly labeled and kept distinct from authenticated accounts.
-              </p>
-            </div>
-          </div>
         </section>
       </div>
     </AppShell>

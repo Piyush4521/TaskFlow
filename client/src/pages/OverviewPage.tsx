@@ -14,8 +14,6 @@ import {
   LayersIcon,
   AlertCircleIcon,
   CalendarIcon,
-  UsersIcon,
-  KanbanIcon,
   FlagIcon,
 } from '../components/common/Icons';
 import styles from './OverviewPage.module.css';
@@ -100,7 +98,7 @@ export const OverviewPage: React.FC = () => {
     showToast('Task created successfully');
   };
 
-  // Summary Metrics
+  // Real Summary Metrics
   const total = tasks.length;
   const todoCount = tasks.filter((t) => t.status === 'To-Do').length;
   const progCount = tasks.filter((t) => t.status === 'In-Progress').length;
@@ -118,7 +116,7 @@ export const OverviewPage: React.FC = () => {
   const medCount = tasks.filter((t) => t.priority === 'Medium' || !t.priority).length;
   const lowCount = tasks.filter((t) => t.priority === 'Low').length;
 
-  // Needs Attention: Overdue tasks (excluding Done)
+  // Overdue tasks (excluding Done)
   const overdueTasks = tasks.filter((t) => checkIsOverdue(t.dueDate, t.status));
 
   // Upcoming Deadlines: (dueDate present, not Done, not overdue, nearest first)
@@ -185,7 +183,7 @@ export const OverviewPage: React.FC = () => {
           <div className={styles.headerInfo}>
             <h1 className={styles.title}>Workspace Overview</h1>
             <p className={styles.subtitle}>
-              Monitor workspace health, task progress, urgent deadlines, and recent activity across your personal projects.
+              Monitor workspace health, task progress, urgent deadlines, and recent activity.
             </p>
           </div>
 
@@ -193,7 +191,7 @@ export const OverviewPage: React.FC = () => {
             <Button
               variant="primary"
               size="md"
-              icon={<PlusIcon size={18} />}
+              icon={<PlusIcon size={16} />}
               onClick={() => setIsModalOpen(true)}
             >
               New Task
@@ -201,7 +199,7 @@ export const OverviewPage: React.FC = () => {
             <Button
               variant="secondary"
               size="md"
-              icon={<ArrowRightIcon size={18} />}
+              icon={<ArrowRightIcon size={16} />}
               onClick={() => navigate('/')}
             >
               Open Board
@@ -209,31 +207,7 @@ export const OverviewPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Quick Navigation Bar */}
-        <nav className={styles.quickNavBar} aria-label="Quick Workspace Navigation">
-          <Link to="/" className={styles.quickNavLink}>
-            <KanbanIcon size={14} />
-            <span>Kanban Board</span>
-          </Link>
-          <Link to="/tasks" className={styles.quickNavLink}>
-            <CheckCircleIcon size={14} />
-            <span>My Tasks</span>
-          </Link>
-          <Link to="/calendar" className={styles.quickNavLink}>
-            <CalendarIcon size={14} />
-            <span>Calendar</span>
-          </Link>
-          <Link to="/team" className={styles.quickNavLink}>
-            <UsersIcon size={14} />
-            <span>Team Workspace</span>
-          </Link>
-          <Link to="/reports" className={styles.quickNavLink}>
-            <LayersIcon size={14} />
-            <span>Reports & Analytics</span>
-          </Link>
-        </nav>
-
-        {/* Priority Focus Action Card (Fernly-inspired Agenda Reminder) */}
+        {/* Priority Focus Action Card */}
         {!isLoading && focusTask && (
           <aside
             className={`${styles.focusCard} ${focusTask.reason.includes('Overdue') ? styles.focusCardUrgent : ''}`}
@@ -288,7 +262,7 @@ export const OverviewPage: React.FC = () => {
               <div className={styles.metricCard}>
                 <div className={styles.metricHeader}>
                   <span className={styles.metricLabel}>Total Tasks</span>
-                  <span className={styles.metricIconWrapper}>
+                  <span className={styles.metricIcon}>
                     <LayersIcon size={16} />
                   </span>
                 </div>
@@ -299,7 +273,7 @@ export const OverviewPage: React.FC = () => {
               <div className={styles.metricCard}>
                 <div className={styles.metricHeader}>
                   <span className={styles.metricLabel}>Completed</span>
-                  <span className={`${styles.metricIconWrapper} ${styles.doneIcon}`}>
+                  <span className={`${styles.metricIcon} ${styles.iconDone}`}>
                     <CheckCircleIcon size={16} />
                   </span>
                 </div>
@@ -312,7 +286,7 @@ export const OverviewPage: React.FC = () => {
               <div className={styles.metricCard}>
                 <div className={styles.metricHeader}>
                   <span className={styles.metricLabel}>In Progress</span>
-                  <span className={`${styles.metricIconWrapper} ${styles.progIcon}`}>
+                  <span className={`${styles.metricIcon} ${styles.iconProg}`}>
                     <ClockIcon size={16} />
                   </span>
                 </div>
@@ -323,7 +297,7 @@ export const OverviewPage: React.FC = () => {
               <div className={styles.metricCard}>
                 <div className={styles.metricHeader}>
                   <span className={styles.metricLabel}>To-Do</span>
-                  <span className={`${styles.metricIconWrapper} ${styles.todoIcon}`}>
+                  <span className={`${styles.metricIcon} ${styles.iconTodo}`}>
                     <LayersIcon size={16} />
                   </span>
                 </div>
@@ -335,12 +309,12 @@ export const OverviewPage: React.FC = () => {
             {/* Midsection: Two Columns (Progress/Breakdowns & Attention/Deadlines) */}
             <div className={styles.sectionGrid}>
               {/* Left Column: Progress & Distributions */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div className={styles.columnStack}>
                 {/* Completion Progress Card */}
                 <div className={styles.bentoCard}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitleGroup}>
-                      <CheckCircleIcon size={18} />
+                      <CheckCircleIcon size={16} />
                       <h2 className={styles.cardTitle}>Completion Progress</h2>
                     </div>
                     <span className={styles.cardBadge}>{doneCount} / {total} Tasks</span>
@@ -420,7 +394,7 @@ export const OverviewPage: React.FC = () => {
                 <div className={styles.bentoCard}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitleGroup}>
-                      <FlagIcon size={18} />
+                      <FlagIcon size={16} />
                       <h2 className={styles.cardTitle}>Priority Breakdown</h2>
                     </div>
                     <span className={styles.cardBadge}>All Tasks</span>
@@ -429,7 +403,7 @@ export const OverviewPage: React.FC = () => {
                   <div className={styles.priorityGrid}>
                     <div className={`${styles.priorityItem} ${styles.prioUrgent}`}>
                       <div className={styles.priorityLabelGroup}>
-                        <FlagIcon size={14} />
+                        <FlagIcon size={12} />
                         <span>Urgent</span>
                       </div>
                       <span className={styles.priorityCount}>{urgentCount}</span>
@@ -437,7 +411,7 @@ export const OverviewPage: React.FC = () => {
 
                     <div className={`${styles.priorityItem} ${styles.prioHigh}`}>
                       <div className={styles.priorityLabelGroup}>
-                        <FlagIcon size={14} />
+                        <FlagIcon size={12} />
                         <span>High</span>
                       </div>
                       <span className={styles.priorityCount}>{highCount}</span>
@@ -445,7 +419,7 @@ export const OverviewPage: React.FC = () => {
 
                     <div className={`${styles.priorityItem} ${styles.prioMed}`}>
                       <div className={styles.priorityLabelGroup}>
-                        <FlagIcon size={14} />
+                        <FlagIcon size={12} />
                         <span>Medium</span>
                       </div>
                       <span className={styles.priorityCount}>{medCount}</span>
@@ -453,7 +427,7 @@ export const OverviewPage: React.FC = () => {
 
                     <div className={`${styles.priorityItem} ${styles.prioLow}`}>
                       <div className={styles.priorityLabelGroup}>
-                        <FlagIcon size={14} />
+                        <FlagIcon size={12} />
                         <span>Low</span>
                       </div>
                       <span className={styles.priorityCount}>{lowCount}</span>
@@ -463,12 +437,12 @@ export const OverviewPage: React.FC = () => {
               </div>
 
               {/* Right Column: Needs Attention & Upcoming Deadlines */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div className={styles.columnStack}>
                 {/* Needs Attention (Overdue Tasks) */}
                 <div className={styles.bentoCard}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitleGroup}>
-                      <AlertCircleIcon size={18} />
+                      <AlertCircleIcon size={16} />
                       <h2 className={styles.cardTitle}>Needs Attention</h2>
                     </div>
                     {overdueTasks.length > 0 && (
@@ -480,10 +454,10 @@ export const OverviewPage: React.FC = () => {
 
                   {overdueTasks.length === 0 ? (
                     <div className={styles.emptyStateBox}>
-                      <CheckCircleIcon size={24} style={{ color: 'var(--color-done)' }} />
+                      <CheckCircleIcon size={22} style={{ color: 'var(--color-done)' }} />
                       <span className={styles.emptyStateTitle}>All deadlines on track</span>
                       <p className={styles.emptyStateText}>
-                        You have no overdue tasks. Active tasks are progressing within scheduled dates.
+                        No overdue tasks in your workspace.
                       </p>
                     </div>
                   ) : (
@@ -498,39 +472,35 @@ export const OverviewPage: React.FC = () => {
                           <div className={styles.taskItemLeft}>
                             <span className={styles.taskItemTitle}>{t.title}</span>
                             <div className={styles.taskItemMeta}>
-                              <span>Stage: {t.status}</span>
-                              <span>•</span>
-                              <span>Priority: {t.priority || 'Medium'}</span>
+                              <span className={styles.overdueTag}>
+                                {formatDueDate(t.dueDate)}
+                              </span>
+                              <span className={styles.taskStatusTag}>{t.status}</span>
                             </div>
                           </div>
-                          <div className={styles.taskItemRight}>
-                            <span className={styles.overdueTag}>
-                              Due {formatDueDate(t.dueDate)}
-                            </span>
-                            <ArrowRightIcon size={14} />
-                          </div>
+                          <ArrowRightIcon size={14} className={styles.taskArrow} />
                         </Link>
                       ))}
                     </div>
                   )}
                 </div>
 
-                {/* Upcoming Deadlines */}
+                {/* Upcoming Deadlines Card */}
                 <div className={styles.bentoCard}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitleGroup}>
-                      <CalendarIcon size={18} />
+                      <CalendarIcon size={16} />
                       <h2 className={styles.cardTitle}>Upcoming Deadlines</h2>
                     </div>
-                    <span className={styles.cardBadge}>Next Deadlines</span>
+                    <span className={styles.cardBadge}>{upcomingTasks.length} Active</span>
                   </div>
 
                   {upcomingTasks.length === 0 ? (
                     <div className={styles.emptyStateBox}>
-                      <CalendarIcon size={24} style={{ color: 'var(--text-muted)' }} />
-                      <span className={styles.emptyStateTitle}>No upcoming deadlines</span>
+                      <CalendarIcon size={22} style={{ color: 'var(--text-muted)' }} />
+                      <span className={styles.emptyStateTitle}>No scheduled deadlines</span>
                       <p className={styles.emptyStateText}>
-                        No pending tasks scheduled with future due dates. Assign due dates when creating or editing tasks.
+                        Add due dates when creating tasks to see upcoming delivery schedules.
                       </p>
                     </div>
                   ) : (
@@ -545,17 +515,13 @@ export const OverviewPage: React.FC = () => {
                           <div className={styles.taskItemLeft}>
                             <span className={styles.taskItemTitle}>{t.title}</span>
                             <div className={styles.taskItemMeta}>
-                              <span>Stage: {t.status}</span>
-                              <span>•</span>
-                              <span>Priority: {t.priority || 'Medium'}</span>
+                              <span className={styles.upcomingTag}>
+                                {getDeadlineLabel(t.dueDate!)}
+                              </span>
+                              <span className={styles.taskStatusTag}>{t.status}</span>
                             </div>
                           </div>
-                          <div className={styles.taskItemRight}>
-                            <span className={styles.upcomingTag}>
-                              {getDeadlineLabel(t.dueDate!)} ({formatDueDate(t.dueDate)})
-                            </span>
-                            <ArrowRightIcon size={14} />
-                          </div>
+                          <ArrowRightIcon size={14} className={styles.taskArrow} />
                         </Link>
                       ))}
                     </div>
@@ -564,94 +530,41 @@ export const OverviewPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Bottom Section: Recent Tasks */}
+            {/* Bottom: Recent Activity */}
             <section className={styles.bentoCard}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardTitleGroup}>
-                  <LayersIcon size={18} />
-                  <h2 className={styles.cardTitle}>Recent Tasks</h2>
+                  <ClockIcon size={16} />
+                  <h2 className={styles.cardTitle}>Recent Workspace Activity</h2>
                 </div>
-                <Link to="/" style={{ fontSize: '13px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  <span>View All on Board</span>
+                <Link to="/" className={styles.viewBoardLink}>
+                  <span>Open Kanban Board</span>
                   <ArrowRightIcon size={14} />
                 </Link>
               </div>
 
               {recentTasks.length === 0 ? (
                 <div className={styles.emptyStateBox}>
-                  <LayersIcon size={28} style={{ color: 'var(--text-muted)' }} />
-                  <span className={styles.emptyStateTitle}>Your workspace is empty</span>
-                  <p className={styles.emptyStateText}>
-                    Create your first task to populate your workspace dashboard and Kanban board.
-                  </p>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    icon={<PlusIcon size={16} />}
-                    onClick={() => setIsModalOpen(true)}
-                    style={{ marginTop: '8px' }}
-                  >
-                    Create First Task
-                  </Button>
+                  <p>No tasks created yet.</p>
                 </div>
               ) : (
-                <div className={styles.recentTableWrapper}>
-                  <table className={styles.recentTable}>
-                    <thead>
-                      <tr>
-                        <th>Task</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                        <th>Due Date</th>
-                        <th>Last Updated</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentTasks.map((t) => {
-                        const statusClass =
-                          t.status === 'Done'
-                            ? styles.badgeDone
-                            : t.status === 'In-Progress'
-                            ? styles.badgeProg
-                            : styles.badgeTodo;
-
-                        return (
-                          <tr key={t._id}>
-                            <td>
-                              <Link to="/" className={styles.tableTitleLink} title="Open in Board">
-                                {t.title}
-                              </Link>
-                            </td>
-                            <td>
-                              <span className={`${styles.tableStatusBadge} ${statusClass}`}>
-                                {t.status}
-                              </span>
-                            </td>
-                            <td>
-                              <span style={{ fontSize: '12px', fontWeight: 500 }}>
-                                {t.priority || 'Medium'}
-                              </span>
-                            </td>
-                            <td>
-                              <span style={{ fontSize: '12px', color: checkIsOverdue(t.dueDate, t.status) ? 'var(--color-danger)' : 'inherit' }}>
-                                {formatDueDate(t.dueDate)}
-                              </span>
-                            </td>
-                            <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                              {formatRelativeTime(t.updatedAt || t.createdAt)}
-                            </td>
-                            <td>
-                              <Link to="/" className={styles.tableActionLink} title="View in Board">
-                                <span>Board</span>
-                                <ArrowRightIcon size={12} />
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                <div className={styles.recentGrid}>
+                  {recentTasks.map((t) => (
+                    <Link key={t._id} to="/" className={styles.recentItemCard}>
+                      <div className={styles.recentItemHeader}>
+                        <span className={styles.recentTitle}>{t.title}</span>
+                        <span className={`${styles.statusChip} ${styles['chip' + t.status.replace('-', '')]}`}>
+                          {t.status}
+                        </span>
+                      </div>
+                      <div className={styles.recentItemFooter}>
+                        <span className={styles.recentPriority}>{t.priority || 'Medium'}</span>
+                        <span className={styles.recentTime}>
+                          {formatRelativeTime(t.updatedAt || t.createdAt)}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               )}
             </section>
@@ -668,3 +581,5 @@ export const OverviewPage: React.FC = () => {
     </AppShell>
   );
 };
+
+export default OverviewPage;

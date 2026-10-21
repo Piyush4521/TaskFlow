@@ -1,268 +1,253 @@
 .teamContainer {
-  max-width: 1100px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 24px 24px 48px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
 }
 
-/* Header */
 .pageHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  padding: 20px 24px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-bento);
 }
 
 .headerTitleGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .pageTitle {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 .pageSubtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.5;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
 }
 
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.statusIndicator {
+.headerStatusBadge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-done);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
   background-color: var(--color-done-bg);
+  color: var(--color-done);
   border: 1px solid var(--color-done-border);
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 .statusDot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--color-done);
 }
 
-/* KPI Highlights */
+/* Metric Strip */
 .metricsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
 }
 
 .metricCard {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-bento);
+}
+
+.metricHeader {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
 .metricLabel {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+}
+
+.metricIcon {
+  color: var(--text-muted);
+}
+
+.iconProgress {
+  color: var(--color-prog);
+}
+
+.iconDone {
+  color: var(--color-done);
 }
 
 .metricValue {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  font-family: var(--font-mono);
+  line-height: 1.2;
 }
 
 .metricSubtext {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 /* Section Card */
 .sectionCard {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-bento);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 14px;
-  gap: 16px;
-}
-
-.sectionTitleGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-primary);
 }
 
 .sectionTitle {
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
 }
 
-.sectionBadge {
+.sectionSubtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.badgePrimary {
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+}
+
+.countChip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
   background-color: var(--bg-surface-subtle);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   border: 1px solid var(--border-subtle);
 }
 
-/* Owner Card */
-.memberCard {
-  background-color: var(--bg-surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 20px;
+/* Owner Body */
+.ownerBody {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.cardTop {
+.ownerInfoRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.avatarWrapper {
+.ownerAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
   flex-shrink: 0;
 }
 
-.avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
-  background-color: var(--color-primary);
-  color: var(--text-inverse);
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: 0.04em;
-  border: 2px solid var(--bg-surface);
-  box-shadow: var(--shadow-sm);
-}
-
-.avatarFixture {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-surface-subtle);
-  color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: 0.02em;
-}
-
-.memberIdentity {
+.ownerMeta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
+  gap: 2px;
 }
 
-.memberName {
-  font-size: 17px;
+.ownerName {
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.memberEmail {
-  font-size: 13px;
-  color: var(--text-secondary);
+.ownerEmail {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .tagGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 
-.roleBadge {
-  font-size: 11px;
+.roleTag {
+  font-size: 10px;
   font-weight: 600;
-  color: var(--color-primary);
-  background-color: var(--color-primary-subtle);
-  border: 1px solid var(--color-primary-border);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.deptBadge {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-done);
-  background-color: var(--color-done-bg);
-  border: 1px solid var(--color-done-border);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-}
-
-.fixtureBadge {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
   background-color: var(--bg-surface-subtle);
+  color: var(--text-secondary);
   border: 1px solid var(--border-subtle);
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
 }
 
-/* Workload Meter */
-.workloadSection {
+.statusTag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-done-bg);
+  color: var(--color-done);
+  border: 1px solid var(--color-done-border);
+}
+
+/* Workload Box */
+.workloadBox {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   padding: 12px 14px;
-  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface-subtle);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
 }
 
 .workloadHeader {
@@ -273,103 +258,81 @@
 }
 
 .workloadLabel {
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.workloadStats {
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.workloadTrack {
-  height: 6px;
-  background-color: var(--border-subtle);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.workloadFill {
-  height: 100%;
-  background-color: var(--color-done);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.cardFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 10px;
-  font-size: 12px;
-}
-
-.activityNote {
+.workloadStats {
   color: var(--text-muted);
 }
 
-.monoSnippet {
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  color: var(--text-secondary);
-  background-color: var(--bg-surface-subtle);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
+.progressBarTrack {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--border-subtle);
+  overflow: hidden;
 }
 
-/* Notice Banner */
-.noticeBanner {
-  background-color: var(--bg-surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--color-primary);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.5;
+.progressBarFill {
+  height: 100%;
+  background-color: var(--color-done);
+  border-radius: 3px;
+  transition: width var(--transition-normal);
 }
 
 /* Team Grid */
 .teamGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
 }
 
-.teamMemberCard {
+.memberCard {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
   background-color: var(--bg-surface-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  gap: 10px;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
-.teamMemberCard:hover {
+.memberCard:hover {
   border-color: var(--border-medium);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
-.memberCardTop {
+.memberHeader {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
 }
 
-.memberMeta {
+.memberAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-xs);
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.memberInfo {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  flex: 1;
   min-width: 0;
 }
 
-.memberCardName {
-  font-size: 15px;
+.memberName {
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
@@ -377,119 +340,70 @@
   text-overflow: ellipsis;
 }
 
-.memberCardRole {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-.memberCardEmail {
-  font-size: 12px;
+.memberRole {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
   color: var(--text-muted);
-  font-family: var(--font-mono, monospace);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 2px;
 }
 
-.memberCardFooter {
+.memberEmailRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memberFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 8px;
   border-top: 1px solid var(--border-subtle);
-  padding-top: 10px;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
-/* Loading Box */
-.loadingBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
-  gap: 12px;
+.deptChip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface);
   color: var(--text-secondary);
-  font-size: 14px;
+  border: 1px solid var(--border-subtle);
 }
 
-.spinner {
-  width: 28px;
-  height: 28px;
-  border: 3px solid var(--border-subtle);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.directoryBadge {
+  font-size: 10px;
+  color: var(--text-muted);
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Error Box */
+/* Loading & Empty States */
+.loadingBox,
+.emptyStateBox,
 .errorBox {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 40px 20px;
   text-align: center;
-  padding: 32px 24px;
-  gap: 12px;
-  background-color: var(--bg-surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-}
-
-.errorTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.errorMessage {
-  font-size: 13px;
-  color: var(--text-secondary);
-  max-width: 460px;
-}
-
-.retryButton {
-  background-color: var(--color-primary);
-  color: var(--text-inverse);
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.retryButton:hover {
-  background-color: var(--color-primary-hover);
-}
-
-/* Empty State Box */
-.emptyStateBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 36px 24px;
-  background-color: var(--bg-surface-subtle);
-  border: 1px dashed var(--border-medium);
-  border-radius: var(--radius-md);
-  gap: 10px;
+  gap: 8px;
 }
 
 .emptyIconWrap {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-surface);
+  border-radius: 50%;
+  background-color: var(--bg-surface-subtle);
   border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
@@ -499,78 +413,73 @@
 }
 
 .emptyStateTitle {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .emptyStateText {
-  font-size: 13px;
-  color: var(--text-secondary);
-  max-width: 540px;
-  line-height: 1.5;
-}
-
-.emptyStateSubtext {
   font-size: 12px;
   color: var(--text-muted);
-  max-width: 520px;
-  line-height: 1.45;
+  max-width: 380px;
 }
 
-/* Architecture Cards Grid */
-.architectureGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-medium);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 
-.archCard {
-  background-color: var(--bg-surface-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-.archHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--color-primary);
+.errorBox {
+  color: var(--color-danger);
 }
 
-.archTitle {
+.errorMessage {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
 }
 
-.archDesc {
+.retryButton {
   font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.45;
+  font-weight: 600;
+  color: var(--color-primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-primary-border);
+  background-color: var(--color-primary-subtle);
+  cursor: pointer;
 }
 
-@media (max-width: 640px) {
-  .teamContainer {
-    padding: 16px 16px 36px;
-    gap: 20px;
+/* Responsive */
+@media (max-width: 900px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
+@media (max-width: 600px) {
   .pageHeader {
     flex-direction: column;
     align-items: flex-start;
+    padding: 16px;
   }
-
-  .cardTop {
-    flex-direction: column;
-    align-items: flex-start;
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
-
   .teamGrid {
     grid-template-columns: 1fr;
+  }
+  .sectionCard {
+    padding: 16px;
   }
 }

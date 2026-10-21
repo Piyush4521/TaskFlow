@@ -1,11 +1,10 @@
 .contentContainer {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 24px 20px 48px;
 }
 
 /* Error Banner */

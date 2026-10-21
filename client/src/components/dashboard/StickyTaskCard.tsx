@@ -20,16 +20,6 @@ interface StickyTaskCardProps {
   isDragOverlay?: boolean;
 }
 
-const getRotation = (id: string): number => {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash << 5) - hash + id.charCodeAt(i);
-    hash |= 0;
-  }
-  const angles = [-0.65, 0.45, -0.35, 0.55, -0.5, 0.35, 0];
-  return angles[Math.abs(hash) % angles.length];
-};
-
 function checkIsOverdue(dueDateStr?: string | null, status?: TaskStatus): boolean {
   if (!dueDateStr || status === 'Done') return false;
   const due = new Date(dueDateStr);
@@ -60,10 +50,8 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
   isDragOverlay = false,
 }) => {
   const statusClassName = styles[task.status.toLowerCase().replace('-', '')];
-  const rotation = React.useMemo(() => getRotation(task._id), [task._id]);
   const isOverdue = checkIsOverdue(task.dueDate, task.status);
   const formattedDueDate = formatDueDate(task.dueDate);
-
 
   const priority = task.priority || 'Medium';
   const priorityClass = styles[`priority${priority}`] || styles.priorityMedium;
@@ -83,19 +71,10 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
   const nextStatus = getNextStatus();
   const prevStatus = getPrevStatus();
 
-  const cardStyle: React.CSSProperties = isDragOverlay
-    ? {}
-    : ({
-        '--note-rot': `${rotation}deg`,
-      } as React.CSSProperties);
-
   return (
     <article
       className={`${styles.card} ${statusClassName} ${isOverdue ? styles.overdueCard : ''} ${isDragOverlay ? styles.dragOverlay : ''}`}
-      style={cardStyle}
     >
-      <div className={styles.tape} aria-hidden="true" />
-
       <div className={styles.cardHeader}>
         <div className={styles.statusGroup}>
           <span className={styles.statusPill}>{task.status}</span>

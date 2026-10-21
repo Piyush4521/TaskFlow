@@ -2,127 +2,55 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 18px 16px 14px;
-  border-radius: var(--radius-sm);
+  padding: 16px 16px 14px;
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-sticky);
-  transform: rotate(var(--note-rot, 0deg));
-  transform-origin: center 8px;
+  box-shadow: var(--shadow-bento);
   transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-fast);
   word-break: break-word;
   overflow: hidden;
 }
 
-.card:hover,
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-bento-hover);
+  border-color: var(--border-medium);
+}
+
 .card:focus-within {
-  transform: translateY(-2px) rotate(0deg);
-  box-shadow: var(--shadow-sticky-hover);
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
 }
 
-/* Subtle physical paper folded-corner effect (bottom right dog-ear) */
-.card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 10px 10px;
-  border-color: transparent transparent var(--bg-canvas) transparent;
-  opacity: 0.85;
-  pointer-events: none;
-  transition: border-width var(--transition-fast);
+/* Subtle left border status accent */
+.todo {
+  border-left: 3px solid var(--color-todo);
 }
 
-.card:hover::after {
-  border-width: 0 0 12px 12px;
+.inprogress {
+  border-left: 3px solid var(--color-prog);
+}
+
+.done {
+  border-left: 3px solid var(--color-done);
 }
 
 .overdueCard {
-  border-left: 3px solid var(--color-danger);
-}
-
-/* Translucent tape accent at top center */
-.tape {
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 12px;
-  border-radius: 2px;
-  pointer-events: none;
-  opacity: 0.85;
-}
-
-/* To-Do Note Color Styling */
-.todo {
-  background-color: var(--note-todo-bg);
-  border-color: var(--note-todo-border);
-}
-.todo .tape {
-  background-color: var(--note-todo-tape);
-}
-.todo .statusPill {
-  background-color: var(--color-todo-bg);
-  color: var(--color-todo);
-  border: 1px solid var(--color-todo-border);
-}
-
-/* In-Progress Note Color Styling */
-.inprogress {
-  background-color: var(--note-prog-bg);
-  border-color: var(--note-prog-border);
-}
-.inprogress .tape {
-  background-color: var(--note-prog-tape);
-}
-.inprogress .statusPill {
-  background-color: var(--color-prog-bg);
-  color: var(--color-prog);
-  border: 1px solid var(--color-prog-border);
-}
-
-/* Done Note Color Styling */
-.done {
-  background-color: var(--note-done-bg);
-  border-color: var(--note-done-border);
-}
-.done .tape {
-  background-color: var(--note-done-tape);
-}
-.done .statusPill {
-  background-color: var(--color-done-bg);
-  color: var(--color-done);
-  border: 1px solid var(--color-done-border);
+  border-left: 3px solid var(--color-danger) !important;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .statusGroup {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.savingBadge {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.dragOverlay {
-  box-shadow: var(--shadow-modal);
-  transform: scale(1.02) rotate(0deg) !important;
-  cursor: grabbing !important;
-  opacity: 0.98;
-  z-index: 100;
 }
 
 .statusPill {
@@ -132,6 +60,30 @@
   border-radius: var(--radius-xs);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.todo .statusPill {
+  background-color: var(--color-todo-bg);
+  color: var(--color-todo);
+  border: 1px solid var(--color-todo-border);
+}
+
+.inprogress .statusPill {
+  background-color: var(--color-prog-bg);
+  color: var(--color-prog);
+  border: 1px solid var(--color-prog-border);
+}
+
+.done .statusPill {
+  background-color: var(--color-done-bg);
+  color: var(--color-done);
+  border: 1px solid var(--color-done-border);
+}
+
+.savingBadge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .cardActions {
@@ -151,7 +103,7 @@
   color: var(--text-muted);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .iconBtn:hover {
@@ -167,17 +119,18 @@
 }
 
 .title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 6px;
-  line-height: 1.35;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
 }
 
 .description {
   font-size: 13px;
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.5;
   margin-bottom: 10px;
   white-space: pre-line;
 }
@@ -235,9 +188,9 @@
   font-weight: 500;
   padding: 2px 7px;
   border-radius: var(--radius-xs);
-  background-color: var(--bg-surface);
+  background-color: var(--bg-surface-subtle);
   color: var(--text-secondary);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-subtle);
   letter-spacing: 0.01em;
 }
 
@@ -254,7 +207,7 @@
   justify-content: flex-end;
   margin-top: auto;
   padding-top: 10px;
-  border-top: 1px dashed var(--border-subtle);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .statusControls {
@@ -271,28 +224,38 @@
   font-weight: 500;
   padding: 4px 8px;
   border-radius: var(--radius-xs);
-  background-color: var(--bg-surface);
+  background-color: var(--bg-surface-subtle);
   color: var(--text-secondary);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .statusShiftBtn:hover {
-  background-color: var(--bg-surface-subtle);
+  background-color: var(--bg-surface);
   color: var(--text-primary);
-  border-color: var(--border-strong);
+  border-color: var(--border-medium);
 }
 
 .primaryShift {
-  background-color: var(--bg-surface);
+  background-color: var(--color-primary-subtle);
   color: var(--color-primary);
   border-color: var(--color-primary-border);
+  font-weight: 600;
 }
 
 .primaryShift:hover {
-  background-color: var(--color-primary-subtle);
-  color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.dragOverlay {
+  box-shadow: var(--shadow-modal);
+  transform: scale(1.02) !important;
+  cursor: grabbing !important;
+  opacity: 0.98;
+  z-index: 100;
 }
 
 @media (prefers-reduced-motion: reduce) {
