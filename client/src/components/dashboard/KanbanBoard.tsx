@@ -4,7 +4,8 @@ import {
   DragOverlay,
   closestCorners,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragStartEvent,
@@ -39,9 +40,15 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {

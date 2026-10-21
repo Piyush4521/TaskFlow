@@ -103,7 +103,12 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
         </div>
 
         {!isDragOverlay && onEdit && onDelete && (
-          <div className={styles.cardActions} onPointerDown={(e) => e.stopPropagation()}>
+          <div
+            className={styles.cardActions}
+            onPointerDown={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
               className={styles.iconBtn}
@@ -155,7 +160,12 @@ export const StickyTaskCard: React.FC<StickyTaskCardProps> = ({
       </div>
 
       {!isDragOverlay && onStatusChange && (
-        <div className={styles.cardFooter} onPointerDown={(e) => e.stopPropagation()}>
+        <div
+          className={styles.cardFooter}
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
           <div className={styles.statusControls}>
             {prevStatus && (
               <button
