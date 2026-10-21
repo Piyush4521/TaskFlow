@@ -11,6 +11,7 @@ import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../sr
 import Task from '../src/models/Task.js';
 import TeamMember from '../src/models/TeamMember.js';
 import { getTeamMembers } from '../src/controllers/teamController.js';
+import { parseAllowedOrigins } from '../src/app.js';
 
 function mockRes() {
   return {
@@ -591,4 +592,18 @@ test('teamController: getTeamMembers retrieves team members sorted by createdAt'
   assert.equal(res.data.data[0].name, 'Ravi Mishra');
 
   TeamMember.find = origFind;
+});
+
+test('parseAllowedOrigins: normalizes URLs with paths, trailing slashes, and comma-separated lists', () => {
+  const origins1 = parseAllowedOrigins('https://task-flow-p.netlify.app/login');
+  assert.ok(origins1.includes('https://task-flow-p.netlify.app'));
+  assert.ok(origins1.includes('http://localhost:5173'));
+
+  const origins2 = parseAllowedOrigins('https://task-flow-p.netlify.app/, http://localhost:3000');
+  assert.ok(origins2.includes('https://task-flow-p.netlify.app'));
+  assert.ok(origins2.includes('http://localhost:3000'));
+
+  const originsDefault = parseAllowedOrigins(undefined);
+  assert.ok(originsDefault.includes('http://localhost:5173'));
+  assert.ok(originsDefault.includes('http://127.0.0.1:5173'));
 });

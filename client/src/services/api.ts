@@ -9,9 +9,13 @@ import {
 } from '../types/api';
 import { TaskStatus, TaskPriority } from '../types/task';
 
-const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL;
-// In production builds, do not fall back to localhost. If unconfigured, use relative origin.
-const BASE_URL = (configuredBaseUrl || (import.meta.env.PROD ? '' : 'http://localhost:5000')).replace(/\/+$/, '');
+const configuredBaseUrl = (
+  import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000')
+)
+  .trim()
+  .replace(/\/+$/, '')
+  .replace(/\/api$/, '');
+const BASE_URL = configuredBaseUrl;
 
 export class ApiClientError extends Error {
   status: number;
@@ -96,11 +100,13 @@ async function request<T>(
       throw err;
     }
 
-    // Network error or fetch failure
-    throw new ApiClientError(
-      0,
-      'Unable to connect to the server. Please check your internet connection and verify the backend is running.'
-    );
+    // Network error or fetch failure (e.g. CORS block, server down, offline)
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    const errorMessage = isOffline
+      ? 'You appear to be offline. Please check your internet connection.'
+      : 'Unable to connect to the server. Please check your connection or verify backend availability and CORS configuration.';
+
+    throw new ApiClientError(0, errorMessage);
   }
 }
 
